@@ -1,0 +1,7269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Design your Profile Go Hard identity."
+  />
+
+  <meta
+    name="theme-color"
+    content="#070809"
+  />
+
+  <title>Editor — Profile Go Hard</title>
+
+  <!-- =========================================================
+       PGH FAVICON
+  ========================================================== -->
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='100' y2='100'%3E%3Cstop stop-color='%2339f47f'/%3E%3Cstop offset='1' stop-color='%230da94a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='%23070809'/%3E%3Cpath d='M18 50C18 34 30 23 44 23C57 23 64 33 72 42C79 50 83 58 83 67C83 83 70 77 57 77C44 77 37 67 29 58C22 50 18 43 18 50Z' stroke='url(%23g)' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23ffffff'/%3E%3C/svg%3E"
+  />
+
+  <style>
+    /* =========================================================
+       ROOT
+    ========================================================== */
+
+    :root {
+      --bg: #070809;
+      --bg-2: #0a0d0f;
+
+      --panel: #0c1012;
+      --panel-2: #101416;
+
+      --text: #f5f7f8;
+      --muted: #8d979b;
+      --muted-2: #687276;
+
+      --line: rgba(255,255,255,.075);
+      --line-strong: rgba(255,255,255,.12);
+
+      --green: #20e56b;
+      --green-light: #39f47f;
+      --green-dark: #0da94a;
+
+      --accent: #20e56b;
+      --accent-light: #39f47f;
+      --accent-soft: rgba(32,229,107,.075);
+      --accent-border: rgba(32,229,107,.18);
+
+      --profile-bg: #0a0d0f;
+      --profile-glow: rgba(32,229,107,.10);
+
+      --radius: 18px;
+
+      --topbar: 68px;
+      --sidebar: 74px;
+      --rightbar: 350px;
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 20% 0%,
+          rgba(32,229,107,.045),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 90% 50%,
+          rgba(32,229,107,.025),
+          transparent 30%
+        ),
+        var(--bg);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a,
+    label,
+    input,
+    textarea,
+    select {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+      background: var(--green);
+      color: #041108;
+    }
+
+
+    /* =========================================================
+       SCROLLBAR
+    ========================================================== */
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070809;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background:
+        linear-gradient(
+          180deg,
+          var(--green-light),
+          var(--green-dark)
+        );
+
+      border-radius: 999px;
+
+      box-shadow:
+        0 0 12px rgba(32,229,107,.35);
+    }
+
+
+    /* =====================================================
+   PGH CUSTOM CURSOR
+===================================================== */
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  pointer-events: none;
+  z-index: 999999;
+
+  opacity: 0;
+
+  transform: translate(-50%, -50%);
+}
+
+/* Small center dot */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #20e56b;
+
+  box-shadow:
+    0 0 12px rgba(32, 229, 107, 0.9),
+    0 0 25px rgba(32, 229, 107, 0.35);
+
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    opacity 0.2s ease;
+}
+
+/* Outer cursor ring */
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(57, 244, 127, 0.65);
+
+  border-radius: 50%;
+
+  background: rgba(32, 229, 107, 0.035);
+
+  box-shadow:
+    0 0 20px rgba(32, 229, 107, 0.12);
+
+  transition:
+    width 0.25s cubic-bezier(.2, .8, .2, 1),
+    height 0.25s cubic-bezier(.2, .8, .2, 1),
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.2s ease;
+}
+
+/* Hide the normal cursor */
+body.cursor-ready {
+  cursor: none;
+}
+
+body.cursor-ready a,
+body.cursor-ready button {
+  cursor: none;
+}
+
+/* Show custom cursor */
+body.cursor-ready .cursor-dot,
+body.cursor-ready .cursor-ring {
+  opacity: 1;
+}
+
+/* Hover state */
+body.cursor-hover .cursor-ring {
+  width: 52px;
+  height: 52px;
+
+  border-color: rgba(57, 244, 127, 0.95);
+
+  background: rgba(32, 229, 107, 0.08);
+
+  box-shadow:
+    0 0 30px rgba(32, 229, 107, 0.2),
+    inset 0 0 20px rgba(32, 229, 107, 0.04);
+}
+
+body.cursor-hover .cursor-dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* Don't use custom cursor on touch devices */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
+
+    /* =========================================================
+       SPLASH
+    ========================================================== */
+
+    .splash {
+      position: fixed;
+      inset: 0;
+
+      z-index: 99999;
+
+      display: grid;
+      place-items: center;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(32,229,107,.10),
+          transparent 27%
+        ),
+        #050607;
+
+      transition:
+        opacity .65s ease,
+        visibility .65s ease;
+    }
+
+    .splash.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-inner {
+      width: min(92vw, 600px);
+
+      text-align: center;
+    }
+
+    .splash-orbit {
+      position: relative;
+
+      width: 150px;
+      height: 150px;
+
+      margin: 0 auto 30px;
+    }
+
+    .splash-ring {
+      position: absolute;
+      inset: 0;
+
+      border:
+        1px solid rgba(32,229,107,.20);
+
+      border-radius: 50%;
+
+      animation:
+        orbitPulse 2.5s ease-in-out infinite;
+    }
+
+    .splash-ring:nth-child(2) {
+      inset: 15px;
+
+      animation-delay: .35s;
+    }
+
+    .splash-ring:nth-child(3) {
+      inset: 30px;
+
+      animation-delay: .7s;
+    }
+
+    .splash-logo {
+      position: absolute;
+
+      inset: 38px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 30px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(32,229,107,.15),
+          rgba(32,229,107,.02)
+        );
+
+      border:
+        1px solid rgba(32,229,107,.30);
+
+      box-shadow:
+        0 0 50px rgba(32,229,107,.16),
+        inset 0 0 30px rgba(32,229,107,.04);
+    }
+
+    .splash-logo svg {
+      width: 58px;
+      height: 58px;
+    }
+
+    .splash-title {
+      font-size: 15px;
+      font-weight: 950;
+
+      letter-spacing: .25em;
+
+      margin-bottom: 9px;
+    }
+
+    .splash-title span {
+      color: var(--green);
+    }
+
+    .splash-subtitle {
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    .loader {
+      width: min(320px,80vw);
+      height: 4px;
+
+      margin: 25px auto 12px;
+
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255,255,255,.07);
+    }
+
+    .loader-bar {
+      width: 0%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--green-dark),
+          var(--green-light)
+        );
+
+      box-shadow:
+        0 0 18px rgba(32,229,107,.5);
+
+      animation:
+        loadProgress 1.85s ease forwards;
+    }
+
+    .loader-status {
+      min-height: 18px;
+
+      color: #697276;
+
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    @keyframes loadProgress {
+      from {
+        width: 0%;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes orbitPulse {
+      0%,100% {
+        transform: scale(.96);
+        opacity: .4;
+      }
+
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+    }
+
+
+    /* =========================================================
+       TOPBAR
+    ========================================================== */
+
+    .topbar {
+      position: fixed;
+
+      inset: 0 0 auto 0;
+
+      z-index: 5000;
+
+      height: var(--topbar);
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 18px;
+
+      background:
+        rgba(7,9,10,.88);
+
+      border-bottom:
+        1px solid var(--line);
+
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .top-left,
+    .top-center,
+    .top-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .top-left {
+      width: 33%;
+
+      gap: 13px;
+    }
+
+    .top-center {
+      width: 34%;
+
+      justify-content: center;
+    }
+
+    .top-right {
+      width: 33%;
+
+      justify-content: flex-end;
+
+      gap: 7px;
+    }
+
+
+    /* BRAND */
+
+    .brand {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      color: var(--text);
+
+      text-decoration: none;
+
+      font-size: 12px;
+      font-weight: 950;
+
+      white-space: nowrap;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 11px;
+
+      background:
+        radial-gradient(
+          circle at 35% 25%,
+          rgba(57,244,127,.16),
+          rgba(32,229,107,.025)
+        );
+
+      border:
+        1px solid rgba(32,229,107,.20);
+    }
+
+    .brand-logo svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .editor-name {
+      display: flex;
+      align-items: center;
+
+      gap: 9px;
+
+      color: #dfe5e7;
+
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .editor-name::before {
+      content: "";
+
+      width: 1px;
+      height: 20px;
+
+      background: var(--line);
+    }
+
+    .editor-name span {
+      color: var(--muted-2);
+
+      font-weight: 700;
+    }
+
+
+    /* HISTORY */
+
+    .history {
+      display: flex;
+
+      gap: 4px;
+    }
+
+    .icon-btn,
+    .top-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      height: 36px;
+
+      padding: 0 11px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 10px;
+
+      color: #9ca6aa;
+
+      background:
+        rgba(255,255,255,.025);
+
+      cursor: pointer;
+
+      transition:
+        transform .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .icon-btn {
+      width: 36px;
+
+      padding: 0;
+
+      font-size: 16px;
+    }
+
+    .icon-btn:hover:not(:disabled),
+    .top-btn:hover {
+      transform: translateY(-1px);
+
+      color: var(--text);
+
+      border-color:
+        rgba(32,229,107,.22);
+
+      background:
+        rgba(32,229,107,.05);
+    }
+
+    .icon-btn:disabled {
+      opacity: .28;
+
+      cursor: not-allowed;
+    }
+
+    .top-btn {
+      gap: 7px;
+
+      text-decoration: none;
+
+      font-size: 9px;
+      font-weight: 850;
+    }
+
+    .top-btn.primary {
+      color: #041008;
+
+      border-color: transparent;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green-light),
+          var(--green)
+        );
+
+      box-shadow:
+        0 8px 25px rgba(32,229,107,.14),
+        inset 0 1px rgba(255,255,255,.3);
+    }
+
+    .top-btn.primary:hover {
+      color: #041008;
+
+      border-color: transparent;
+
+      background:
+        linear-gradient(
+          135deg,
+          #4dfb8a,
+          #20e56b
+        );
+    }
+
+
+    /* =========================================================
+       WORKSPACE
+    ========================================================== */
+
+    .workspace {
+      position: fixed;
+
+      inset:
+        var(--topbar)
+        0
+        0
+        0;
+
+      display: grid;
+
+      grid-template-columns:
+        var(--sidebar)
+        minmax(0,1fr)
+        var(--rightbar);
+    }
+
+
+    /* =========================================================
+       LEFT TOOLBAR
+    ========================================================== */
+
+    .tool-sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding: 12px 8px;
+
+      background:
+        rgba(8,10,11,.94);
+
+      border-right:
+        1px solid var(--line);
+    }
+
+    .tool-list {
+      display: grid;
+
+      gap: 5px;
+
+      width: 100%;
+    }
+
+    .tool-btn {
+      position: relative;
+
+      width: 100%;
+      min-height: 58px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 5px;
+
+      border: 0;
+      outline: 0;
+
+      border-radius: 12px;
+
+      color: #697378;
+
+      background: transparent;
+
+      cursor: pointer;
+
+      transition:
+        color .18s ease,
+        background .18s ease,
+        transform .18s ease;
+    }
+
+    .tool-btn:hover {
+      color: #cfd5d7;
+
+      background:
+        rgba(255,255,255,.035);
+    }
+
+    .tool-btn.active {
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+    }
+
+    .tool-btn.active::before {
+      content: "";
+
+      position: absolute;
+
+      left: -8px;
+      top: 50%;
+
+      width: 2px;
+      height: 24px;
+
+      transform:
+        translateY(-50%);
+
+      border-radius: 999px;
+
+      background: var(--accent);
+
+      box-shadow:
+        0 0 12px var(--accent);
+    }
+
+    .tool-icon {
+      font-size: 18px;
+
+      line-height: 1;
+    }
+
+    .tool-label {
+      font-size: 7px;
+
+      font-weight: 850;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+    }
+
+
+    /* =========================================================
+       CANVAS
+    ========================================================== */
+
+    .canvas-area {
+      position: relative;
+
+      min-width: 0;
+      min-height: 0;
+
+      overflow: auto;
+
+      padding: 35px;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(255,255,255,.025),
+          transparent 50%
+        ),
+        #090b0c;
+    }
+
+    .canvas-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 20px;
+    }
+
+    .canvas-title {
+      color: #8c969a;
+
+      font-size: 9px;
+      font-weight: 900;
+
+      letter-spacing: .15em;
+
+      text-transform: uppercase;
+    }
+
+    .canvas-actions {
+      display: flex;
+
+      gap: 6px;
+    }
+
+    .mini-btn {
+      height: 30px;
+
+      padding: 0 10px;
+
+      display: inline-flex;
+      align-items: center;
+
+      gap: 6px;
+
+      color: #899397;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 9px;
+
+      font-size: 8px;
+      font-weight: 850;
+
+      cursor: pointer;
+
+      transition:
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .mini-btn:hover {
+      color: var(--text);
+
+      border-color:
+        rgba(255,255,255,.14);
+
+      background:
+        rgba(255,255,255,.045);
+    }
+
+    .canvas-stage {
+      min-height:
+        calc(100vh - 160px);
+
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+
+      padding:
+        25px 0 70px;
+    }
+
+
+    /* =========================================================
+       PROFILE FRAME
+    ========================================================== */
+
+    .profile-frame {
+      width: min(610px,90%);
+
+      padding: 9px;
+
+      border-radius: 27px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.07),
+          rgba(255,255,255,.018)
+        );
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      box-shadow:
+        0 35px 100px rgba(0,0,0,.42),
+        0 0 70px var(--profile-glow);
+    }
+
+    .profile-card {
+      position: relative;
+
+      min-height: 710px;
+
+      overflow: hidden;
+
+      border-radius: 21px;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          var(--profile-glow),
+          transparent 38%
+        ),
+        var(--profile-bg);
+
+      border:
+        1px solid var(--accent-border);
+
+      transition:
+        background .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+    }
+
+    .profile-orb {
+      position: absolute;
+
+      width: 320px;
+      height: 320px;
+
+      top: -185px;
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      border-radius: 50%;
+
+      background:
+        var(--profile-glow);
+
+      filter: blur(20px);
+
+      pointer-events: none;
+    }
+
+    .profile-infinity {
+      position: absolute;
+
+      top: 65px;
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      color: var(--accent);
+
+      font-size: 220px;
+      font-weight: 950;
+
+      line-height: 1;
+
+      opacity: .028;
+
+      user-select: none;
+
+      pointer-events: none;
+    }
+
+    .profile-content {
+      position: relative;
+
+      z-index: 2;
+
+      padding:
+        60px 35px 35px;
+
+      text-align: center;
+    }
+
+
+    /* =========================================================
+       PROFILE AVATAR
+    ========================================================== */
+
+    .profile-avatar {
+      position: relative;
+
+      width: 104px;
+      height: 104px;
+
+      display: grid;
+      place-items: center;
+
+      margin: 0 auto 18px;
+
+      overflow: hidden;
+
+      border-radius: 31px;
+
+      color: var(--accent-light);
+
+      background:
+        radial-gradient(
+          circle at 35% 25%,
+          var(--accent-soft),
+          rgba(0,0,0,.20)
+        );
+
+      border:
+        1px solid var(--accent-border);
+
+      box-shadow:
+        0 0 60px var(--accent-soft),
+        inset 0 0 30px rgba(255,255,255,.015);
+
+      font-size: 46px;
+      font-weight: 950;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      display: block;
+    }
+
+    .profile-name {
+      font-size: 31px;
+
+      line-height: 1;
+
+      font-weight: 950;
+
+      letter-spacing: -.055em;
+    }
+
+    .profile-handle {
+      margin-top: 8px;
+
+      color: var(--accent-light);
+
+      font-size: 10px;
+
+      font-weight: 850;
+    }
+
+    .profile-status {
+      display: inline-flex;
+      align-items: center;
+
+      gap: 7px;
+
+      margin-top: 13px;
+
+      padding: 7px 11px;
+
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border:
+        1px solid var(--accent-border);
+
+      border-radius: 999px;
+
+      font-size: 9px;
+
+      font-weight: 850;
+    }
+
+    .profile-status-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+
+      box-shadow:
+        0 0 10px var(--accent);
+    }
+
+    .profile-bio {
+      max-width: 420px;
+
+      margin: 22px auto 0;
+
+      color: #929b9f;
+
+      font-size: 11px;
+
+      line-height: 1.8;
+    }
+
+    .profile-divider {
+      height: 1px;
+
+      margin: 30px 0 22px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--accent-border),
+          transparent
+        );
+    }
+
+    .profile-section-title {
+      margin-bottom: 12px;
+
+      color: #667175;
+
+      font-size: 8px;
+
+      font-weight: 900;
+
+      letter-spacing: .18em;
+
+      text-transform: uppercase;
+    }
+
+    .profile-tags,
+    .profile-links {
+      display: flex;
+      flex-wrap: wrap;
+
+      justify-content: center;
+
+      gap: 7px;
+    }
+
+    .profile-tag {
+      padding: 8px 10px;
+
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border:
+        1px solid var(--accent-border);
+
+      border-radius: 9px;
+
+      font-size: 8px;
+
+      font-weight: 850;
+    }
+
+    .profile-link {
+      padding: 8px 11px;
+
+      color: #aab2b5;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: 9px;
+
+      text-decoration: none;
+
+      font-size: 8px;
+
+      font-weight: 850;
+
+      transition:
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+    }
+
+    .profile-link:hover {
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border-color:
+        var(--accent-border);
+    }
+
+    .profile-empty {
+      color: #5e686c;
+
+      font-size: 9px;
+    }
+
+    .profile-footer {
+      margin-top: 40px;
+
+      color: #465054;
+
+      font-size: 8px;
+
+      font-weight: 900;
+
+      letter-spacing: .15em;
+    }
+
+    .profile-footer span {
+      color: var(--accent);
+    }
+
+
+    /* =========================================================
+       RIGHT INSPECTOR
+    ========================================================== */
+
+    .inspector {
+      min-width: 0;
+
+      overflow-y: auto;
+
+      background:
+        rgba(8,10,11,.94);
+
+      border-left:
+        1px solid var(--line);
+    }
+
+    .inspector-header {
+      position: sticky;
+
+      top: 0;
+
+      z-index: 20;
+
+      padding: 20px;
+
+      background:
+        rgba(8,10,11,.94);
+
+      border-bottom:
+        1px solid var(--line);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .inspector-heading {
+      font-size: 13px;
+
+      font-weight: 950;
+    }
+
+    .inspector-subheading {
+      margin-top: 5px;
+
+      color: var(--muted-2);
+
+      font-size: 9px;
+
+      line-height: 1.5;
+    }
+
+    .inspector-body {
+      padding: 18px;
+    }
+
+    .inspector-panel {
+      display: none;
+
+      animation:
+        panelIn .22s ease;
+    }
+
+    .inspector-panel.active {
+      display: block;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+
+    /* =========================================================
+       FIELD
+    ========================================================== */
+
+    .field {
+      display: grid;
+
+      gap: 7px;
+
+      margin-bottom: 16px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      color: #929da1;
+
+      font-size: 9px;
+
+      font-weight: 850;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+
+      outline: none;
+
+      padding: 11px 12px;
+
+      color: var(--text);
+
+      background:
+        rgba(0,0,0,.25);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 10px;
+
+      font-size: 10px;
+
+      transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .textarea {
+      min-height: 100px;
+
+      resize: vertical;
+
+      line-height: 1.6;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
+      border-color:
+        var(--accent);
+
+      background:
+        rgba(0,0,0,.38);
+
+      box-shadow:
+        0 0 0 3px var(--accent-soft);
+    }
+
+    .select {
+      appearance: none;
+
+      cursor: pointer;
+
+      background-image:
+        linear-gradient(
+          45deg,
+          transparent 50%,
+          #7c878b 50%
+        ),
+        linear-gradient(
+          135deg,
+          #7c878b 50%,
+          transparent 50%
+        );
+
+      background-position:
+        calc(100% - 14px) 50%,
+        calc(100% - 10px) 50%;
+
+      background-size:
+        4px 4px,
+        4px 4px;
+
+      background-repeat: no-repeat;
+    }
+
+    .select option {
+      color: white;
+
+      background: #0b0e10;
+    }
+
+    .field-hint {
+      color: #596368;
+
+      font-size: 8px;
+
+      line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       AVATAR PRESETS
+    ========================================================== */
+
+    .avatar-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(5,1fr);
+
+      gap: 6px;
+    }
+
+    .avatar-option {
+      position: relative;
+    }
+
+    .avatar-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .avatar-button {
+      width: 100%;
+
+      aspect-ratio: 1;
+
+      display: grid;
+
+      place-items: center;
+
+      color: #899397;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 10px;
+
+      font-size: 18px;
+
+      cursor: pointer;
+
+      transition:
+        transform .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .avatar-button:hover {
+      transform:
+        translateY(-2px);
+
+      color: var(--accent-light);
+
+      border-color:
+        var(--accent-border);
+    }
+
+    .avatar-option input:checked + .avatar-button {
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border-color:
+        var(--accent);
+    }
+
+
+    /* =========================================================
+       CUSTOM ICON CREATOR
+    ========================================================== */
+
+    .icon-maker {
+      padding: 13px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.035),
+          rgba(255,255,255,.015)
+        );
+
+      box-shadow:
+        inset 0 1px rgba(255,255,255,.025);
+    }
+
+    .icon-maker-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 11px;
+    }
+
+    .icon-maker-title strong {
+      color: #e9edef;
+
+      font-size: 10px;
+
+      font-weight: 950;
+    }
+
+    .icon-maker-title span {
+      padding: 4px 7px;
+
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border:
+        1px solid var(--accent-border);
+
+      border-radius: 999px;
+
+      font-size: 7px;
+
+      font-weight: 900;
+    }
+
+    .icon-maker-preview-wrap {
+      display: flex;
+      justify-content: center;
+
+      padding: 10px 0 16px;
+    }
+
+    .icon-maker-preview {
+      position: relative;
+
+      width: 112px;
+      height: 112px;
+
+      display: grid;
+      place-items: center;
+
+      overflow: hidden;
+
+      border-radius: 32px;
+
+      border:
+        1px solid rgba(255,255,255,.12);
+
+      background:
+        linear-gradient(
+          145deg,
+          #111719,
+          #080a0b
+        );
+
+      box-shadow:
+        0 20px 55px rgba(0,0,0,.38);
+    }
+
+    .icon-maker-preview::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      border:
+        1px solid rgba(255,255,255,.05);
+
+      border-radius: inherit;
+    }
+
+    .icon-maker-preview img {
+      position: absolute;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      display: none;
+
+      z-index: 2;
+    }
+
+    .icon-maker-preview.has-image img {
+      display: block;
+    }
+
+    .icon-maker-symbol {
+      position: relative;
+
+      z-index: 1;
+
+      color: var(--icon-color, var(--accent-light));
+
+      font-size: 47px;
+
+      font-weight: 950;
+
+      line-height: 1;
+
+      text-shadow:
+        0 0 24px var(--icon-glow, var(--accent));
+    }
+
+    .icon-maker-preview.has-image
+    .icon-maker-symbol {
+      display: none;
+    }
+
+    .icon-maker-controls {
+      display: grid;
+
+      gap: 10px;
+    }
+
+    .icon-control-label {
+      color: #899397;
+
+      font-size: 8px;
+
+      font-weight: 850;
+    }
+
+    .icon-symbol-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(6,1fr);
+
+      gap: 5px;
+    }
+
+    .icon-symbol-option {
+      position: relative;
+    }
+
+    .icon-symbol-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .icon-symbol-option label {
+      height: 34px;
+
+      display: grid;
+
+      place-items: center;
+
+      color: #818c90;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      font-size: 14px;
+
+      transition:
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+    }
+
+    .icon-symbol-option label:hover {
+      color: var(--accent-light);
+
+      transform:
+        translateY(-1px);
+    }
+
+    .icon-symbol-option input:checked + label {
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border-color:
+        var(--accent);
+    }
+
+    .icon-bg-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4,1fr);
+
+      gap: 6px;
+    }
+
+    .icon-bg-option {
+      position: relative;
+    }
+
+    .icon-bg-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .icon-bg-option label {
+      height: 38px;
+
+      display: block;
+
+      border-radius: 9px;
+
+      border:
+        1px solid var(--line);
+
+      cursor: pointer;
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease;
+    }
+
+    .icon-bg-option label:hover {
+      transform:
+        translateY(-1px);
+    }
+
+    .icon-bg-option input:checked + label {
+      border-color:
+        var(--accent);
+
+      box-shadow:
+        0 0 0 2px var(--accent-soft);
+    }
+
+    .icon-bg-core {
+      background:
+        radial-gradient(
+          circle at 35% 25%,
+          #39f47f,
+          transparent 28%
+        ),
+        #0b1210;
+    }
+
+    .icon-bg-green {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #8affaf,
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          #092814,
+          #03100a
+        );
+    }
+
+    .icon-bg-mono {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #ffffff,
+          transparent 28%
+        ),
+        #141618;
+    }
+
+    .icon-bg-neon {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #53f5ff,
+          transparent 28%
+        ),
+        #07151a;
+    }
+
+    .icon-bg-purple {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #bb78ff,
+          transparent 28%
+        ),
+        #120a1c;
+    }
+
+    .icon-bg-blue {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #5aa8ff,
+          transparent 28%
+        ),
+        #07111f;
+    }
+
+    .icon-bg-red {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #ff6374,
+          transparent 28%
+        ),
+        #1c080b;
+    }
+
+    .icon-bg-orange {
+      background:
+        radial-gradient(
+          circle at 70% 25%,
+          #ffb454,
+          transparent 28%
+        ),
+        #1b0f05;
+    }
+
+    .icon-upload-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr auto;
+
+      gap: 6px;
+    }
+
+    .upload-icon-btn,
+    .remove-icon-btn {
+      min-height: 34px;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 0 10px;
+
+      border-radius: 9px;
+
+      font-size: 8px;
+
+      font-weight: 900;
+
+      cursor: pointer;
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .upload-icon-btn {
+      color: #061009;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent-light),
+          var(--accent)
+        );
+
+      border:
+        1px solid transparent;
+    }
+
+    .upload-icon-btn:hover {
+      transform:
+        translateY(-1px);
+    }
+
+    .remove-icon-btn {
+      color: #8b9599;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+    }
+
+    .remove-icon-btn:hover {
+      color: #fff;
+
+      border-color:
+        rgba(255,255,255,.15);
+    }
+
+    .icon-name-input {
+      display: grid;
+
+      grid-template-columns:
+        1fr auto;
+
+      gap: 6px;
+    }
+
+    .icon-name-input .input {
+      min-width: 0;
+    }
+
+    .icon-char-count {
+      min-width: 35px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      color: #5c676b;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 9px;
+
+      font-size: 8px;
+    }
+
+    .icon-note {
+      margin-top: 9px;
+
+      color: #596368;
+
+      font-size: 7px;
+
+      line-height: 1.55;
+    }
+
+
+    /* =========================================================
+       THEME CARDS
+    ========================================================== */
+
+    .theme-list {
+      display: grid;
+
+      gap: 9px;
+    }
+
+    .theme-option {
+      position: relative;
+    }
+
+    .theme-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .theme-card {
+      display: grid;
+
+      grid-template-columns:
+        54px 1fr auto;
+
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 10px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 12px;
+
+      background:
+        rgba(255,255,255,.02);
+
+      cursor: pointer;
+
+      transition:
+        border-color .18s ease,
+        background .18s ease,
+        transform .18s ease;
+    }
+
+    .theme-card:hover {
+      transform:
+        translateY(-1px);
+
+      border-color:
+        rgba(255,255,255,.14);
+    }
+
+    .theme-option input:checked + .theme-card {
+      border-color:
+        var(--accent);
+
+      background:
+        var(--accent-soft);
+    }
+
+    .theme-swatch {
+      width: 54px;
+      height: 38px;
+
+      border-radius: 8px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+    }
+
+    .theme-core {
+      background:
+        radial-gradient(
+          circle at 75% 20%,
+          #20e56b,
+          transparent 30%
+        ),
+        #0a0d0f;
+    }
+
+    .theme-aura {
+      background:
+        radial-gradient(
+          circle at 75% 20%,
+          #72ff9f,
+          transparent 30%
+        ),
+        #07150c;
+    }
+
+    .theme-mono {
+      background:
+        radial-gradient(
+          circle at 75% 20%,
+          #fff,
+          transparent 30%
+        ),
+        #111315;
+    }
+
+    .theme-neon {
+      background:
+        radial-gradient(
+          circle at 75% 20%,
+          #53f5ff,
+          transparent 30%
+        ),
+        #070d12;
+    }
+
+    .theme-name {
+      color: #e1e6e8;
+
+      font-size: 9px;
+
+      font-weight: 900;
+    }
+
+    .theme-description {
+      margin-top: 3px;
+
+      color: #626c70;
+
+      font-size: 8px;
+    }
+
+    .theme-check {
+      color: var(--accent);
+
+      opacity: 0;
+
+      font-size: 13px;
+
+      font-weight: 950;
+    }
+
+    .theme-option input:checked + .theme-card .theme-check {
+      opacity: 1;
+    }
+
+
+    /* =========================================================
+       INTERESTS
+    ========================================================== */
+
+    .interest-grid {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 6px;
+    }
+
+    .interest-option {
+      position: relative;
+    }
+
+    .interest-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .interest-option label {
+      display: inline-flex;
+
+      align-items: center;
+
+      padding: 8px 10px;
+
+      color: #7d888c;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 9px;
+
+      cursor: pointer;
+
+      font-size: 8px;
+
+      font-weight: 850;
+
+      transition:
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+    }
+
+    .interest-option label:hover {
+      transform:
+        translateY(-1px);
+
+      color: #cdd4d6;
+    }
+
+    .interest-option input:checked + label {
+      color: var(--accent-light);
+
+      background:
+        var(--accent-soft);
+
+      border-color:
+        var(--accent-border);
+    }
+
+
+    /* =========================================================
+       LINKS
+    ========================================================== */
+
+    .link-input {
+      position: relative;
+    }
+
+    .link-prefix {
+      position: absolute;
+
+      left: 12px;
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      color: #566166;
+
+      font-size: 8px;
+
+      font-weight: 900;
+
+      pointer-events: none;
+    }
+
+    .link-input .input {
+      padding-left: 61px;
+    }
+
+
+    /* =========================================================
+       DIVIDER
+    ========================================================== */
+
+    .inspector-divider {
+      height: 1px;
+
+      margin: 20px 0;
+
+      background:
+        var(--line);
+    }
+
+
+    /* =========================================================
+       QUICK ACTIONS
+    ========================================================== */
+
+    .quick-actions {
+      display: grid;
+
+      gap: 7px;
+    }
+
+    .quick-btn {
+      width: 100%;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      padding: 11px 12px;
+
+      color: #9da6aa;
+
+      background:
+        rgba(255,255,255,.025);
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      font-size: 9px;
+
+      font-weight: 850;
+
+      transition:
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+    }
+
+    .quick-btn:hover {
+      color: var(--text);
+
+      background:
+        rgba(255,255,255,.045);
+
+      border-color:
+        rgba(255,255,255,.13);
+    }
+
+    .quick-btn span:last-child {
+      color: #555f63;
+    }
+
+
+    /* =========================================================
+       SAVE STATE
+    ========================================================== */
+
+    .save-state {
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      margin-top: 18px;
+
+      color: #596367;
+
+      font-size: 8px;
+
+      font-weight: 800;
+    }
+
+    .save-state-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: #4d575b;
+    }
+
+    .save-state.unsaved {
+      color: #a8b0b3;
+    }
+
+    .save-state.unsaved .save-state-dot {
+      background: var(--accent);
+
+      box-shadow:
+        0 0 10px var(--accent);
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================== */
+
+    .mobile-tools {
+      display: none;
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================== */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      z-index: 9000;
+
+      transform:
+        translate(-50%,130%);
+
+      opacity: 0;
+
+      padding: 11px 15px;
+
+      color: #dfffe9;
+
+      background:
+        rgba(10,15,12,.96);
+
+      border:
+        1px solid rgba(32,229,107,.20);
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.35),
+        0 0 30px rgba(32,229,107,.06);
+
+      font-size: 9px;
+
+      font-weight: 850;
+
+      pointer-events: none;
+
+      transition:
+        transform .35s ease,
+        opacity .35s ease;
+    }
+
+    .toast.show {
+      transform:
+        translate(-50%,0);
+
+      opacity: 1;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================== */
+
+    @media (max-width: 1050px) {
+
+      :root {
+        --rightbar: 320px;
+      }
+
+      .brand span:last-child,
+      .editor-name {
+        display: none;
+      }
+
+      .canvas-area {
+        padding: 25px;
+      }
+    }
+
+
+    @media (max-width: 850px) {
+
+      body {
+        overflow: auto;
+      }
+
+      .topbar {
+        position: sticky;
+
+        top: 0;
+
+        height: 60px;
+
+        padding: 0 12px;
+      }
+
+      .workspace {
+        position: static;
+
+        min-height:
+          calc(100vh - 60px);
+
+        display: flex;
+
+        flex-direction: column;
+      }
+
+      .tool-sidebar {
+        display: none;
+      }
+
+      .canvas-area {
+        order: 1;
+
+        min-height: auto;
+
+        overflow: visible;
+
+        padding:
+          18px 12px 100px;
+      }
+
+      .inspector {
+        order: 2;
+
+        overflow: visible;
+
+        border-left: 0;
+
+        border-top:
+          1px solid var(--line);
+      }
+
+      .inspector-header {
+        position: static;
+      }
+
+      .canvas-stage {
+        min-height: auto;
+
+        padding:
+          10px 0 20px;
+      }
+
+      .profile-frame {
+        width:
+          min(610px,100%);
+      }
+
+      .mobile-tools {
+        position: fixed;
+
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+
+        z-index: 4500;
+
+        display: grid;
+
+        grid-template-columns:
+          repeat(4,1fr);
+
+        gap: 5px;
+
+        padding: 6px;
+
+        background:
+          rgba(8,10,11,.90);
+
+        border:
+          1px solid var(--line);
+
+        border-radius: 15px;
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        box-shadow:
+          0 20px 50px rgba(0,0,0,.35);
+      }
+
+      .mobile-tool {
+        padding: 9px 4px;
+
+        border: 0;
+
+        color: #707a7e;
+
+        background: transparent;
+
+        border-radius: 10px;
+
+        font-size: 8px;
+
+        font-weight: 850;
+
+        cursor: pointer;
+      }
+
+      .mobile-tool.active {
+        color: var(--accent-light);
+
+        background:
+          var(--accent-soft);
+      }
+
+      .top-center {
+        display: none;
+      }
+
+      .top-left,
+      .top-right {
+        width: 50%;
+      }
+
+      .top-right {
+        gap: 5px;
+      }
+
+      .top-btn {
+        padding: 0 9px;
+      }
+    }
+
+
+    @media (max-width: 520px) {
+
+      .canvas-area {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .canvas-top {
+        padding: 0 5px;
+      }
+
+      .canvas-actions .mini-btn:first-child {
+        display: none;
+      }
+
+      .profile-frame {
+        padding: 6px;
+      }
+
+      .profile-card {
+        min-height: 620px;
+      }
+
+      .profile-content {
+        padding:
+          45px 20px 28px;
+      }
+
+      .profile-name {
+        font-size: 27px;
+      }
+
+      .profile-avatar {
+        width: 88px;
+        height: 88px;
+
+        font-size: 38px;
+      }
+
+      .inspector-body {
+        padding: 14px;
+      }
+
+      .top-right .top-btn:first-child {
+        display: none;
+      }
+
+      .icon-symbol-grid {
+        grid-template-columns:
+          repeat(5,1fr);
+      }
+
+      .icon-maker-preview {
+        width: 96px;
+        height: 96px;
+      }
+    }
+
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: .001ms !important;
+
+        scroll-behavior: auto !important;
+      }
+    }
+
+
+    @media (hover:none), (pointer:coarse) {
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================================================
+       CURSOR
+  ========================================================== -->
+
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+
+  <!-- =========================================================
+       SPLASH
+  ========================================================== -->
+
+  <div
+    class="splash"
+    id="splash"
+  >
+
+    <div class="splash-inner">
+
+      <div class="splash-orbit">
+
+        <div class="splash-ring"></div>
+        <div class="splash-ring"></div>
+        <div class="splash-ring"></div>
+
+        <div class="splash-logo">
+
+          <svg
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+
+            <defs>
+              <linearGradient
+                id="splashGradient"
+                x1="0"
+                y1="0"
+                x2="100"
+                y2="100"
+              >
+                <stop stop-color="#39f47f" />
+                <stop offset="1" stop-color="#0da94a" />
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M18 50C18 34 30 23 44 23C57 23 64 33 72 42C79 50 83 58 83 67C83 83 70 77 57 77C44 77 37 67 29 58C22 50 18 43 18 50Z"
+              stroke="url(#splashGradient)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="50"
+              cy="50"
+              r="5"
+              fill="#ffffff"
+            />
+
+          </svg>
+
+        </div>
+
+      </div>
+
+      <div class="splash-title">
+        PROFILE <span>GO HARD</span>
+      </div>
+
+      <div class="splash-subtitle">
+        Opening your identity studio...
+      </div>
+
+      <div class="loader">
+        <div class="loader-bar"></div>
+      </div>
+
+      <div
+        class="loader-status"
+        id="loaderStatus"
+      >
+        Initializing PGH...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       TOPBAR
+  ========================================================== -->
+
+  <header class="topbar">
+
+    <div class="top-left">
+
+      <a
+        href="dashboard.html"
+        class="brand"
+      >
+
+        <span class="brand-logo">
+
+          <svg
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+
+            <defs>
+              <linearGradient
+                id="brandGradient"
+                x1="0"
+                y1="0"
+                x2="100"
+                y2="100"
+              >
+                <stop stop-color="#39f47f" />
+                <stop offset="1" stop-color="#0da94a" />
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M18 50C18 34 30 23 44 23C57 23 64 33 72 42C79 50 83 58 83 67C83 83 70 77 57 77C44 77 37 67 29 58C22 50 18 43 18 50Z"
+              stroke="url(#brandGradient)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="50"
+              cy="50"
+              r="5"
+              fill="#ffffff"
+            />
+
+          </svg>
+
+        </span>
+
+        <span>
+          Profile Go Hard
+        </span>
+
+      </a>
+
+
+      <div class="editor-name">
+        <span>Editor</span>
+        Profile Studio
+      </div>
+
+    </div>
+
+
+    <div class="top-center">
+
+      <div class="history">
+
+        <button
+          class="icon-btn"
+          id="undoBtn"
+          type="button"
+          title="Undo"
+          disabled
+        >
+          ↶
+        </button>
+
+        <button
+          class="icon-btn"
+          id="redoBtn"
+          type="button"
+          title="Redo"
+          disabled
+        >
+          ↷
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="top-right">
+
+      <a
+        href="profile.html"
+        class="top-btn"
+      >
+        <span>◉</span>
+        Preview
+      </a>
+
+      <button
+        class="top-btn primary"
+        id="saveTopBtn"
+        type="button"
+      >
+        <span>✓</span>
+        Save
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================================================
+       WORKSPACE
+  ========================================================== -->
+
+  <main class="workspace">
+
+
+    <!-- =======================================================
+         LEFT TOOLBAR
+    ======================================================== -->
+
+    <aside class="tool-sidebar">
+
+      <div class="tool-list">
+
+        <button
+          class="tool-btn active"
+          data-panel="design"
+          type="button"
+        >
+          <span class="tool-icon">✦</span>
+          <span class="tool-label">Design</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          data-panel="identity"
+          type="button"
+        >
+          <span class="tool-icon">◎</span>
+          <span class="tool-label">Identity</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          data-panel="appearance"
+          type="button"
+        >
+          <span class="tool-icon">◈</span>
+          <span class="tool-label">Style</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          data-panel="interests"
+          type="button"
+        >
+          <span class="tool-icon">✧</span>
+          <span class="tool-label">Interests</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          data-panel="links"
+          type="button"
+        >
+          <span class="tool-icon">↗</span>
+          <span class="tool-label">Links</span>
+        </button>
+
+      </div>
+
+
+      <div class="sidebar-bottom">
+
+        <button
+          class="tool-btn"
+          id="resetBtn"
+          type="button"
+        >
+          <span class="tool-icon">↺</span>
+          <span class="tool-label">Reset</span>
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- =======================================================
+         CENTER CANVAS
+    ======================================================== -->
+
+    <section class="canvas-area">
+
+      <div class="canvas-top">
+
+        <div class="canvas-title">
+          Your public profile
+        </div>
+
+        <div class="canvas-actions">
+
+          <button
+            class="mini-btn"
+            id="fitBtn"
+            type="button"
+          >
+            ⛶ Fit
+          </button>
+
+          <a
+            href="profile.html"
+            class="mini-btn"
+            style="text-decoration:none;"
+          >
+            ↗ Open
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="canvas-stage">
+
+        <div class="profile-frame">
+
+          <article class="profile-card">
+
+            <div class="profile-orb"></div>
+
+            <div class="profile-infinity">
+              ∞
+            </div>
+
+
+            <div class="profile-content">
+
+              <div
+                class="profile-avatar"
+                id="previewAvatar"
+              >
+                ∞
+              </div>
+
+
+              <div
+                class="profile-name"
+                id="previewName"
+              >
+                Yaya
+              </div>
+
+
+              <div
+                class="profile-handle"
+                id="previewHandle"
+              >
+                @yaya
+              </div>
+
+
+              <div
+                class="profile-status"
+                id="previewStatus"
+              >
+                <span class="profile-status-dot"></span>
+                Online
+              </div>
+
+
+              <div
+                class="profile-bio"
+                id="previewBio"
+              >
+                Building. Creating. Exploring.
+                Just making my corner of the internet. ∞
+              </div>
+
+
+              <div class="profile-divider"></div>
+
+
+              <div class="profile-section-title">
+                Interests
+              </div>
+
+
+              <div
+                class="profile-tags"
+                id="previewInterests"
+              ></div>
+
+
+              <div class="profile-divider"></div>
+
+
+              <div class="profile-section-title">
+                Links
+              </div>
+
+
+              <div
+                class="profile-links"
+                id="previewLinks"
+              ></div>
+
+
+              <div class="profile-footer">
+                PROFILE <span>GO HARD</span>
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         RIGHT INSPECTOR
+    ======================================================== -->
+
+    <aside class="inspector">
+
+      <div class="inspector-header">
+
+        <div
+          class="inspector-heading"
+          id="inspectorHeading"
+        >
+          Design
+        </div>
+
+        <div
+          class="inspector-subheading"
+          id="inspectorSubheading"
+        >
+          Build your profile identity from one place.
+        </div>
+
+      </div>
+
+
+      <div class="inspector-body">
+
+
+        <!-- ===================================================
+             DESIGN
+        ==================================================== -->
+
+        <section
+          class="inspector-panel active"
+          data-inspector="design"
+        >
+
+          <div class="field">
+
+            <label>
+              Quick start
+            </label>
+
+            <div class="quick-actions">
+
+              <button
+                class="quick-btn"
+                data-quick="builder"
+                type="button"
+              >
+                <span>Builder identity</span>
+                <span>∞</span>
+              </button>
+
+              <button
+                class="quick-btn"
+                data-quick="creator"
+                type="button"
+              >
+                <span>Creator identity</span>
+                <span>✦</span>
+              </button>
+
+              <button
+                class="quick-btn"
+                data-quick="minimal"
+                type="button"
+              >
+                <span>Minimal identity</span>
+                <span>◈</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="inspector-divider"></div>
+
+
+          <div class="field">
+
+            <label>
+              Your workspace
+            </label>
+
+            <div class="field-hint">
+              Build your identity on the left, then watch your
+              public profile update instantly in the canvas.
+            </div>
+
+          </div>
+
+
+          <div class="inspector-divider"></div>
+
+
+          <div
+            class="save-state"
+            id="saveState"
+          >
+            <span class="save-state-dot"></span>
+            All changes saved
+          </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             IDENTITY
+        ==================================================== -->
+
+        <section
+          class="inspector-panel"
+          data-inspector="identity"
+        >
+
+          <div class="field">
+
+            <label for="displayName">
+              Display name
+            </label>
+
+            <input
+              class="input"
+              id="displayName"
+              type="text"
+              maxlength="32"
+              placeholder="Your name"
+            />
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="username">
+              Username
+            </label>
+
+            <input
+              class="input"
+              id="username"
+              type="text"
+              maxlength="24"
+              placeholder="yourname"
+            />
+
+            <div class="field-hint">
+              This becomes your public identity handle.
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="bio">
+              Bio
+            </label>
+
+            <textarea
+              class="textarea"
+              id="bio"
+              maxlength="180"
+              placeholder="Tell people who you are..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="statusMode">
+              Status
+            </label>
+
+            <select
+              class="select"
+              id="statusMode"
+            >
+              <option value="Online">
+                Online
+              </option>
+
+              <option value="Building">
+                Building
+              </option>
+
+              <option value="Creating">
+                Creating
+              </option>
+
+              <option value="Exploring">
+                Exploring
+              </option>
+
+              <option value="Busy">
+                Busy
+              </option>
+
+              <option value="Custom">
+                Custom...
+              </option>
+            </select>
+
+          </div>
+
+
+          <div
+            class="field"
+            id="customStatusField"
+            style="display:none;"
+          >
+
+            <label for="customStatus">
+              Custom status
+            </label>
+
+            <input
+              class="input"
+              id="customStatus"
+              type="text"
+              maxlength="32"
+              placeholder="Shipping v2..."
+            />
+
+          </div>
+
+
+          <!-- =================================================
+               PRESET AVATARS
+          ================================================== -->
+
+          <div class="field">
+
+            <label>
+              Quick avatar
+            </label>
+
+            <div class="avatar-grid">
+
+              <div class="avatar-option">
+
+                <input
+                  id="avatarInfinity"
+                  type="radio"
+                  name="avatar"
+                  value="∞"
+                />
+
+                <label
+                  class="avatar-button"
+                  for="avatarInfinity"
+                >
+                  ∞
+                </label>
+
+              </div>
+
+
+              <div class="avatar-option">
+
+                <input
+                  id="avatarStar"
+                  type="radio"
+                  name="avatar"
+                  value="✦"
+                />
+
+                <label
+                  class="avatar-button"
+                  for="avatarStar"
+                >
+                  ✦
+                </label>
+
+              </div>
+
+
+              <div class="avatar-option">
+
+                <input
+                  id="avatarEnergy"
+                  type="radio"
+                  name="avatar"
+                  value="⚡"
+                />
+
+                <label
+                  class="avatar-button"
+                  for="avatarEnergy"
+                >
+                  ⚡
+                </label>
+
+              </div>
+
+
+              <div class="avatar-option">
+
+                <input
+                  id="avatarDiamond"
+                  type="radio"
+                  name="avatar"
+                  value="◈"
+                />
+
+                <label
+                  class="avatar-button"
+                  for="avatarDiamond"
+                >
+                  ◈
+                </label>
+
+              </div>
+
+
+              <div class="avatar-option">
+
+                <input
+                  id="avatarCore"
+                  type="radio"
+                  name="avatar"
+                  value="◆"
+                />
+
+                <label
+                  class="avatar-button"
+                  for="avatarCore"
+                >
+                  ◆
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               ICON MAKER
+          ================================================== -->
+
+          <div class="field">
+
+            <label>
+              Make your icon
+            </label>
+
+
+            <div class="icon-maker">
+
+              <div class="icon-maker-title">
+
+                <strong>
+                  PGH Icon Studio
+                </strong>
+
+                <span>
+                  YOUR ICON
+                </span>
+
+              </div>
+
+
+              <!-- PREVIEW -->
+
+              <div class="icon-maker-preview-wrap">
+
+                <div
+                  class="icon-maker-preview"
+                  id="iconMakerPreview"
+                >
+
+                  <img
+                    id="iconMakerImage"
+                    alt="Custom icon preview"
+                  />
+
+                  <span
+                    class="icon-maker-symbol"
+                    id="iconMakerSymbol"
+                  >
+                    ∞
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- CONTROLS -->
+
+              <div class="icon-maker-controls">
+
+
+                <!-- INITIALS -->
+
+                <div>
+
+                  <div class="icon-control-label">
+                    Your initials / text
+                  </div>
+
+                  <div
+                    class="icon-name-input"
+                    style="margin-top:6px;"
+                  >
+
+                    <input
+                      class="input"
+                      id="iconText"
+                      type="text"
+                      maxlength="3"
+                      placeholder="YG"
+                    />
+
+                    <div
+                      class="icon-char-count"
+                      id="iconCharCount"
+                    >
+                      0/3
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <!-- SYMBOLS -->
+
+                <div>
+
+                  <div
+                    class="icon-control-label"
+                    style="margin-bottom:6px;"
+                  >
+                    Or choose a symbol
+                  </div>
+
+                  <div class="icon-symbol-grid">
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconInfinity"
+                        type="radio"
+                        name="iconSymbol"
+                        value="∞"
+                        checked
+                      />
+
+                      <label for="iconInfinity">
+                        ∞
+                      </label>
+
+                    </div>
+
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconSpark"
+                        type="radio"
+                        name="iconSymbol"
+                        value="✦"
+                      />
+
+                      <label for="iconSpark">
+                        ✦
+                      </label>
+
+                    </div>
+
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconBolt"
+                        type="radio"
+                        name="iconSymbol"
+                        value="⚡"
+                      />
+
+                      <label for="iconBolt">
+                        ⚡
+                      </label>
+
+                    </div>
+
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconDiamond"
+                        type="radio"
+                        name="iconSymbol"
+                        value="◆"
+                      />
+
+                      <label for="iconDiamond">
+                        ◆
+                      </label>
+
+                    </div>
+
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconCross"
+                        type="radio"
+                        name="iconSymbol"
+                        value="✚"
+                      />
+
+                      <label for="iconCross">
+                        ✚
+                      </label>
+
+                    </div>
+
+
+                    <div class="icon-symbol-option">
+
+                      <input
+                        id="iconDot"
+                        type="radio"
+                        name="iconSymbol"
+                        value="●"
+                      />
+
+                      <label for="iconDot">
+                        ●
+                      </label>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <!-- BACKGROUND -->
+
+                <div>
+
+                  <div
+                    class="icon-control-label"
+                    style="margin-bottom:6px;"
+                  >
+                    Background
+                  </div>
+
+                  <div class="icon-bg-grid">
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgCore"
+                        type="radio"
+                        name="iconBackground"
+                        value="core"
+                        checked
+                      />
+
+                      <label
+                        class="icon-bg-core"
+                        for="iconBgCore"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgGreen"
+                        type="radio"
+                        name="iconBackground"
+                        value="green"
+                      />
+
+                      <label
+                        class="icon-bg-green"
+                        for="iconBgGreen"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgMono"
+                        type="radio"
+                        name="iconBackground"
+                        value="mono"
+                      />
+
+                      <label
+                        class="icon-bg-mono"
+                        for="iconBgMono"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgNeon"
+                        type="radio"
+                        name="iconBackground"
+                        value="neon"
+                      />
+
+                      <label
+                        class="icon-bg-neon"
+                        for="iconBgNeon"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgPurple"
+                        type="radio"
+                        name="iconBackground"
+                        value="purple"
+                      />
+
+                      <label
+                        class="icon-bg-purple"
+                        for="iconBgPurple"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgBlue"
+                        type="radio"
+                        name="iconBackground"
+                        value="blue"
+                      />
+
+                      <label
+                        class="icon-bg-blue"
+                        for="iconBgBlue"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgRed"
+                        type="radio"
+                        name="iconBackground"
+                        value="red"
+                      />
+
+                      <label
+                        class="icon-bg-red"
+                        for="iconBgRed"
+                      ></label>
+
+                    </div>
+
+
+                    <div class="icon-bg-option">
+
+                      <input
+                        id="iconBgOrange"
+                        type="radio"
+                        name="iconBackground"
+                        value="orange"
+                      />
+
+                      <label
+                        class="icon-bg-orange"
+                        for="iconBgOrange"
+                      ></label>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <!-- UPLOAD -->
+
+                <div>
+
+                  <div
+                    class="icon-control-label"
+                    style="margin-bottom:6px;"
+                  >
+                    Or use your own image
+                  </div>
+
+                  <div class="icon-upload-row">
+
+                    <label
+                      class="upload-icon-btn"
+                      for="customIconInput"
+                    >
+                      Upload image
+                    </label>
+
+                    <button
+                      class="remove-icon-btn"
+                      id="removeCustomIcon"
+                      type="button"
+                    >
+                      Remove
+                    </button>
+
+                  </div>
+
+                  <input
+                    id="customIconInput"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    hidden
+                  />
+
+                </div>
+
+
+                <div class="icon-note">
+                  Your custom icon is saved as part of your PGH
+                  profile in this browser. For the future global
+                  PGH version, this will be stored in your account.
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             APPEARANCE
+        ==================================================== -->
+
+        <section
+          class="inspector-panel"
+          data-inspector="appearance"
+        >
+
+          <div class="field">
+
+            <label>
+              Profile aura
+            </label>
+
+            <div class="theme-list">
+
+
+              <div class="theme-option">
+
+                <input
+                  id="themeDark"
+                  type="radio"
+                  name="theme"
+                  value="dark"
+                />
+
+                <label
+                  class="theme-card"
+                  for="themeDark"
+                >
+
+                  <div class="theme-swatch theme-core"></div>
+
+                  <div>
+
+                    <div class="theme-name">
+                      Core
+                    </div>
+
+                    <div class="theme-description">
+                      Classic PGH
+                    </div>
+
+                  </div>
+
+                  <div class="theme-check">
+                    ✓
+                  </div>
+
+                </label>
+
+              </div>
+
+
+              <div class="theme-option">
+
+                <input
+                  id="themeGreen"
+                  type="radio"
+                  name="theme"
+                  value="green"
+                />
+
+                <label
+                  class="theme-card"
+                  for="themeGreen"
+                >
+
+                  <div class="theme-swatch theme-aura"></div>
+
+                  <div>
+
+                    <div class="theme-name">
+                      Aura
+                    </div>
+
+                    <div class="theme-description">
+                      Deep green
+                    </div>
+
+                  </div>
+
+                  <div class="theme-check">
+                    ✓
+                  </div>
+
+                </label>
+
+              </div>
+
+
+              <div class="theme-option">
+
+                <input
+                  id="themeMono"
+                  type="radio"
+                  name="theme"
+                  value="mono"
+                />
+
+                <label
+                  class="theme-card"
+                  for="themeMono"
+                >
+
+                  <div class="theme-swatch theme-mono"></div>
+
+                  <div>
+
+                    <div class="theme-name">
+                      Mono
+                    </div>
+
+                    <div class="theme-description">
+                      Minimal
+                    </div>
+
+                  </div>
+
+                  <div class="theme-check">
+                    ✓
+                  </div>
+
+                </label>
+
+              </div>
+
+
+              <div class="theme-option">
+
+                <input
+                  id="themeNeon"
+                  type="radio"
+                  name="theme"
+                  value="neon"
+                />
+
+                <label
+                  class="theme-card"
+                  for="themeNeon"
+                >
+
+                  <div class="theme-swatch theme-neon"></div>
+
+                  <div>
+
+                    <div class="theme-name">
+                      Neon
+                    </div>
+
+                    <div class="theme-description">
+                      Electric
+                    </div>
+
+                  </div>
+
+                  <div class="theme-check">
+                    ✓
+                  </div>
+
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             INTERESTS
+        ==================================================== -->
+
+        <section
+          class="inspector-panel"
+          data-inspector="interests"
+        >
+
+          <div class="field">
+
+            <label>
+              Pick your interests
+            </label>
+
+            <div class="interest-grid">
+
+              <div class="interest-option">
+                <input
+                  id="interestTechnology"
+                  type="checkbox"
+                  value="Technology"
+                />
+
+                <label for="interestTechnology">
+                  Technology
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestCoding"
+                  type="checkbox"
+                  value="Coding"
+                />
+
+                <label for="interestCoding">
+                  Coding
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestGaming"
+                  type="checkbox"
+                  value="Gaming"
+                />
+
+                <label for="interestGaming">
+                  Gaming
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestSports"
+                  type="checkbox"
+                  value="Sports"
+                />
+
+                <label for="interestSports">
+                  Sports
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestDesign"
+                  type="checkbox"
+                  value="Design"
+                />
+
+                <label for="interestDesign">
+                  Design
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestMusic"
+                  type="checkbox"
+                  value="Music"
+                />
+
+                <label for="interestMusic">
+                  Music
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestArt"
+                  type="checkbox"
+                  value="Art"
+                />
+
+                <label for="interestArt">
+                  Art
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestTravel"
+                  type="checkbox"
+                  value="Travel"
+                />
+
+                <label for="interestTravel">
+                  Travel
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestBuilding"
+                  type="checkbox"
+                  value="Building"
+                />
+
+                <label for="interestBuilding">
+                  Building
+                </label>
+              </div>
+
+
+              <div class="interest-option">
+                <input
+                  id="interestLearning"
+                  type="checkbox"
+                  value="Learning"
+                />
+
+                <label for="interestLearning">
+                  Learning
+                </label>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="inspector-divider"></div>
+
+
+          <div class="field">
+
+            <label>
+              Profile tip
+            </label>
+
+            <div class="field-hint">
+              Pick the interests that actually represent you.
+              PGH is about showing your identity, not fitting into
+              one category.
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             LINKS
+        ==================================================== -->
+
+        <section
+          class="inspector-panel"
+          data-inspector="links"
+        >
+
+          <div class="field">
+
+            <label for="github">
+              GitHub
+            </label>
+
+            <div class="link-input">
+
+              <span class="link-prefix">
+                github
+              </span>
+
+              <input
+                class="input"
+                id="github"
+                type="url"
+                placeholder="github.com/..."
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="website">
+              Website
+            </label>
+
+            <div class="link-input">
+
+              <span class="link-prefix">
+                web
+              </span>
+
+              <input
+                class="input"
+                id="website"
+                type="url"
+                placeholder="yourwebsite.com"
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="instagram">
+              Instagram
+            </label>
+
+            <div class="link-input">
+
+              <span class="link-prefix">
+                insta
+              </span>
+
+              <input
+                class="input"
+                id="instagram"
+                type="url"
+                placeholder="instagram.com/..."
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="youtube">
+              YouTube
+            </label>
+
+            <div class="link-input">
+
+              <span class="link-prefix">
+                yt
+              </span>
+
+              <input
+                class="input"
+                id="youtube"
+                type="url"
+                placeholder="youtube.com/..."
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="inspector-divider"></div>
+
+
+          <div class="field">
+
+            <label>
+              Links preview
+            </label>
+
+            <div class="field-hint">
+              Links appear as buttons on your public profile and
+              open in a new tab.
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div
+          class="save-state"
+          id="bottomSaveState"
+        >
+          <span class="save-state-dot"></span>
+          All changes saved
+        </div>
+
+      </div>
+
+    </aside>
+
+  </main>
+
+
+  <!-- =========================================================
+       MOBILE TOOLS
+  ========================================================== -->
+
+  <nav class="mobile-tools">
+
+    <button
+      class="mobile-tool active"
+      data-panel="design"
+      type="button"
+    >
+      ✦ Design
+    </button>
+
+    <button
+      class="mobile-tool"
+      data-panel="identity"
+      type="button"
+    >
+      ◎ Identity
+    </button>
+
+    <button
+      class="mobile-tool"
+      data-panel="appearance"
+      type="button"
+    >
+      ◈ Style
+    </button>
+
+    <button
+      class="mobile-tool"
+      data-panel="interests"
+      type="button"
+    >
+      ✧ More
+    </button>
+
+  </nav>
+
+
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
+
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+
+  <script>
+    /* =========================================================
+       STORAGE
+    ========================================================== */
+
+    const STORAGE_KEY =
+      "pgh_profile";
+
+    const ACCOUNT_KEY =
+      "pgh_account";
+
+
+    /* =========================================================
+       ACCOUNT
+    ========================================================== */
+
+    let account = null;
+
+    try {
+
+      account =
+        JSON.parse(
+          localStorage.getItem(
+            ACCOUNT_KEY
+          ) || "null"
+        );
+
+    } catch {
+
+      account = null;
+
+    }
+
+
+    /* =========================================================
+       DEFAULT PROFILE
+    ========================================================== */
+
+    const defaultProfile = {
+
+      displayName:
+        account?.displayName ||
+        "Yaya",
+
+      username:
+        account?.username ||
+        "yaya",
+
+      bio:
+        "Building. Creating. Exploring. Just making my corner of the internet. ∞",
+
+      status:
+        "Online",
+
+      avatar:
+        "∞",
+
+      customIcon:
+        "",
+
+      iconText:
+        "",
+
+      iconSymbol:
+        "∞",
+
+      iconBackground:
+        "core",
+
+      interests: [
+        "Technology",
+        "Coding",
+        "Building"
+      ],
+
+      github:
+        "",
+
+      website:
+        "",
+
+      instagram:
+        "",
+
+      youtube:
+        "",
+
+      theme:
+        "dark"
+    };
+
+
+    /* =========================================================
+       LOAD PROFILE
+    ========================================================== */
+
+    function loadProfile() {
+
+      try {
+
+        const stored =
+          JSON.parse(
+            localStorage.getItem(
+              STORAGE_KEY
+            ) || "null"
+          );
+
+        if (!stored) {
+
+          return {
+            ...defaultProfile
+          };
+
+        }
+
+        return {
+
+          ...defaultProfile,
+
+          ...stored,
+
+          interests:
+            Array.isArray(
+              stored.interests
+            )
+              ? stored.interests
+              : [
+                  ...defaultProfile.interests
+                ]
+
+        };
+
+      } catch {
+
+        return {
+          ...defaultProfile
+        };
+
+      }
+
+    }
+
+
+    let profile =
+      loadProfile();
+
+    let hasUnsavedChanges =
+      false;
+
+    let toastTimer =
+      null;
+
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================== */
+
+    const displayNameInput =
+      document.getElementById(
+        "displayName"
+      );
+
+    const usernameInput =
+      document.getElementById(
+        "username"
+      );
+
+    const bioInput =
+      document.getElementById(
+        "bio"
+      );
+
+    const statusMode =
+      document.getElementById(
+        "statusMode"
+      );
+
+    const customStatus =
+      document.getElementById(
+        "customStatus"
+      );
+
+    const customStatusField =
+      document.getElementById(
+        "customStatusField"
+      );
+
+
+    const githubInput =
+      document.getElementById(
+        "github"
+      );
+
+    const websiteInput =
+      document.getElementById(
+        "website"
+      );
+
+    const instagramInput =
+      document.getElementById(
+        "instagram"
+      );
+
+    const youtubeInput =
+      document.getElementById(
+        "youtube"
+      );
+
+
+    const previewAvatar =
+      document.getElementById(
+        "previewAvatar"
+      );
+
+    const previewName =
+      document.getElementById(
+        "previewName"
+      );
+
+    const previewHandle =
+      document.getElementById(
+        "previewHandle"
+      );
+
+    const previewStatus =
+      document.getElementById(
+        "previewStatus"
+      );
+
+    const previewBio =
+      document.getElementById(
+        "previewBio"
+      );
+
+    const previewInterests =
+      document.getElementById(
+        "previewInterests"
+      );
+
+    const previewLinks =
+      document.getElementById(
+        "previewLinks"
+      );
+
+
+    const saveState =
+      document.getElementById(
+        "saveState"
+      );
+
+    const bottomSaveState =
+      document.getElementById(
+        "bottomSaveState"
+      );
+
+    const toast =
+      document.getElementById(
+        "toast"
+      );
+
+
+    /* =========================================================
+       ICON MAKER ELEMENTS
+    ========================================================== */
+
+    const iconMakerPreview =
+      document.getElementById(
+        "iconMakerPreview"
+      );
+
+    const iconMakerImage =
+      document.getElementById(
+        "iconMakerImage"
+      );
+
+    const iconMakerSymbol =
+      document.getElementById(
+        "iconMakerSymbol"
+      );
+
+    const iconText =
+      document.getElementById(
+        "iconText"
+      );
+
+    const iconCharCount =
+      document.getElementById(
+        "iconCharCount"
+      );
+
+    const customIconInput =
+      document.getElementById(
+        "customIconInput"
+      );
+
+    const removeCustomIcon =
+      document.getElementById(
+        "removeCustomIcon"
+      );
+
+
+    /* =========================================================
+       ICON BACKGROUND MAP
+    ========================================================== */
+
+    const iconBackgrounds = {
+
+      core:
+        "radial-gradient(circle at 35% 25%, #39f47f, transparent 28%), #0b1210",
+
+      green:
+        "radial-gradient(circle at 70% 25%, #8affaf, transparent 28%), linear-gradient(145deg, #092814, #03100a)",
+
+      mono:
+        "radial-gradient(circle at 70% 25%, #ffffff, transparent 28%), #141618",
+
+      neon:
+        "radial-gradient(circle at 70% 25%, #53f5ff, transparent 28%), #07151a",
+
+      purple:
+        "radial-gradient(circle at 70% 25%, #bb78ff, transparent 28%), #120a1c",
+
+      blue:
+        "radial-gradient(circle at 70% 25%, #5aa8ff, transparent 28%), #07111f",
+
+      red:
+        "radial-gradient(circle at 70% 25%, #ff6374, transparent 28%), #1c080b",
+
+      orange:
+        "radial-gradient(circle at 70% 25%, #ffb454, transparent 28%), #1b0f05"
+
+    };
+
+
+    /* =========================================================
+       THEME ENGINE
+    ========================================================== */
+
+    function applyTheme(theme) {
+
+      const themes = {
+
+        dark: {
+
+          accent:
+            "#20e56b",
+
+          light:
+            "#39f47f",
+
+          soft:
+            "rgba(32,229,107,.075)",
+
+          border:
+            "rgba(32,229,107,.18)",
+
+          bg:
+            "#0a0d0f",
+
+          glow:
+            "rgba(32,229,107,.10)"
+
+        },
+
+
+        green: {
+
+          accent:
+            "#36f27d",
+
+          light:
+            "#72ff9f",
+
+          soft:
+            "rgba(54,242,125,.09)",
+
+          border:
+            "rgba(54,242,125,.20)",
+
+          bg:
+            "#07150c",
+
+          glow:
+            "rgba(54,242,125,.15)"
+
+        },
+
+
+        mono: {
+
+          accent:
+            "#e7ecee",
+
+          light:
+            "#ffffff",
+
+          soft:
+            "rgba(255,255,255,.06)",
+
+          border:
+            "rgba(255,255,255,.16)",
+
+          bg:
+            "#111315",
+
+          glow:
+            "rgba(255,255,255,.09)"
+
+        },
+
+
+        neon: {
+
+          accent:
+            "#53f5ff",
+
+          light:
+            "#8fffff",
+
+          soft:
+            "rgba(83,245,255,.07)",
+
+          border:
+            "rgba(83,245,255,.18)",
+
+          bg:
+            "#070d12",
+
+          glow:
+            "rgba(83,245,255,.13)"
+
+        }
+
+      };
+
+
+      const selected =
+        themes[theme] ||
+        themes.dark;
+
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--accent",
+          selected.accent
+        );
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--accent-light",
+          selected.light
+        );
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--accent-soft",
+          selected.soft
+        );
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--accent-border",
+          selected.border
+        );
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-bg",
+          selected.bg
+        );
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-glow",
+          selected.glow
+        );
+
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================== */
+
+    function getStatus() {
+
+      if (
+        statusMode.value ===
+        "Custom"
+      ) {
+
+        return (
+          customStatus.value.trim() ||
+          "Online"
+        );
+
+      }
+
+      return statusMode.value;
+
+    }
+
+
+    function updateCustomStatus() {
+
+      const isCustom =
+        statusMode.value ===
+        "Custom";
+
+      customStatusField.style.display =
+        isCustom
+          ? "grid"
+          : "none";
+
+      if (!isCustom) {
+
+        customStatus.value =
+          "";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       AVATAR
+    ========================================================== */
+
+    function getAvatar() {
+
+      return (
+        document.querySelector(
+          'input[name="avatar"]:checked'
+        )?.value ||
+        "∞"
+      );
+
+    }
+
+
+    /* =========================================================
+       ICON MAKER
+    ========================================================== */
+
+    function getIconSymbol() {
+
+      return (
+        document.querySelector(
+          'input[name="iconSymbol"]:checked'
+        )?.value ||
+        "∞"
+      );
+
+    }
+
+
+    function getIconBackground() {
+
+      return (
+        document.querySelector(
+          'input[name="iconBackground"]:checked'
+        )?.value ||
+        "core"
+      );
+
+    }
+
+
+    function getIconText() {
+
+      return (
+        iconText.value
+          .trim()
+          .slice(0,3)
+      );
+
+    }
+
+
+    function updateIconMaker() {
+
+      const text =
+        getIconText();
+
+      const symbol =
+        getIconSymbol();
+
+      const background =
+        getIconBackground();
+
+
+      iconMakerPreview.style.background =
+        iconBackgrounds[
+          background
+        ] ||
+        iconBackgrounds.core;
+
+
+      iconCharCount.textContent =
+        `${text.length}/3`;
+
+
+      if (text) {
+
+        iconMakerSymbol.textContent =
+          text;
+
+      } else {
+
+        iconMakerSymbol.textContent =
+          symbol;
+
+      }
+
+
+      if (
+        iconMakerImage.dataset.src
+      ) {
+
+        iconMakerPreview.classList.add(
+          "has-image"
+        );
+
+      } else {
+
+        iconMakerPreview.classList.remove(
+          "has-image"
+        );
+
+      }
+
+    }
+
+
+    function getCustomIcon() {
+
+      return (
+        iconMakerImage.dataset.src ||
+        ""
+      );
+
+    }
+
+
+    /* =========================================================
+       INTERESTS
+    ========================================================== */
+
+    const interestInputs =
+      [
+        ...document.querySelectorAll(
+          ".interest-option input"
+        )
+      ];
+
+
+    function getInterests() {
+
+      return interestInputs
+        .filter(
+          input => input.checked
+        )
+        .map(
+          input => input.value
+        );
+
+    }
+
+
+    /* =========================================================
+       THEME
+    ========================================================== */
+
+    const themeInputs =
+      [
+        ...document.querySelectorAll(
+          'input[name="theme"]'
+        )
+      ];
+
+
+    function getTheme() {
+
+      return (
+        themeInputs.find(
+          input =>
+            input.checked
+        )?.value ||
+        "dark"
+      );
+
+    }
+
+
+    /* =========================================================
+       FORM DATA
+    ========================================================== */
+
+    function getFormData() {
+
+      return {
+
+        displayName:
+          displayNameInput.value.trim() ||
+          "Yaya",
+
+        username:
+          usernameInput.value
+            .trim()
+            .replace(/^@+/, "")
+            .replace(/\s+/g, "")
+            .toLowerCase() ||
+          "yaya",
+
+        bio:
+          bioInput.value.trim() ||
+          "Building. Creating. Exploring. ∞",
+
+        status:
+          getStatus(),
+
+        avatar:
+          getAvatar(),
+
+        customIcon:
+          getCustomIcon(),
+
+        iconText:
+          getIconText(),
+
+        iconSymbol:
+          getIconSymbol(),
+
+        iconBackground:
+          getIconBackground(),
+
+        interests:
+          getInterests(),
+
+        github:
+          githubInput.value.trim(),
+
+        website:
+          websiteInput.value.trim(),
+
+        instagram:
+          instagramInput.value.trim(),
+
+        youtube:
+          youtubeInput.value.trim(),
+
+        theme:
+          getTheme()
+
+      };
+
+    }
+
+
+    /* =========================================================
+       URL
+    ========================================================== */
+
+    function normalizeUrl(value) {
+
+      if (!value) {
+        return "";
+      }
+
+      const trimmed =
+        value.trim();
+
+      if (
+        trimmed.startsWith(
+          "http://"
+        ) ||
+        trimmed.startsWith(
+          "https://"
+        )
+      ) {
+
+        return trimmed;
+
+      }
+
+      return (
+        "https://" +
+        trimmed
+      );
+
+    }
+
+
+    /* =========================================================
+       RENDER STATUS
+    ========================================================== */
+
+    function renderStatus(status) {
+
+      previewStatus.replaceChildren();
+
+      const dot =
+        document.createElement(
+          "span"
+        );
+
+      dot.className =
+        "profile-status-dot";
+
+
+      const text =
+        document.createTextNode(
+          status ||
+          "Online"
+        );
+
+
+      previewStatus.append(
+        dot,
+        text
+      );
+
+    }
+
+
+    /* =========================================================
+       RENDER AVATAR
+    ========================================================== */
+
+    function renderAvatar(data) {
+
+      previewAvatar.replaceChildren();
+
+
+      if (data.customIcon) {
+
+        const image =
+          document.createElement(
+            "img"
+          );
+
+        image.src =
+          data.customIcon;
+
+        image.alt =
+          "Profile icon";
+
+        previewAvatar.appendChild(
+          image
+        );
+
+        return;
+
+      }
+
+
+      const symbol =
+        data.iconText ||
+        data.iconSymbol ||
+        data.avatar ||
+        "∞";
+
+
+      const span =
+        document.createElement(
+          "span"
+        );
+
+      span.textContent =
+        symbol;
+
+      previewAvatar.appendChild(
+        span
+      );
+
+    }
+
+
+    /* =========================================================
+       RENDER PREVIEW
+    ========================================================== */
+
+    function renderPreview(data) {
+
+      applyTheme(
+        data.theme
+      );
+
+
+      renderAvatar(
+        data
+      );
+
+
+      previewName.textContent =
+        data.displayName ||
+        "Yaya";
+
+
+      previewHandle.textContent =
+        "@" +
+        (
+          data.username ||
+          "yaya"
+        );
+
+
+      renderStatus(
+        data.status
+      );
+
+
+      previewBio.textContent =
+        data.bio ||
+        "Building. Creating. Exploring. ∞";
+
+
+      /* INTERESTS */
+
+      previewInterests
+        .replaceChildren();
+
+
+      if (
+        Array.isArray(
+          data.interests
+        ) &&
+        data.interests.length
+      ) {
+
+        data.interests.forEach(
+          interest => {
+
+            const tag =
+              document.createElement(
+                "span"
+              );
+
+            tag.className =
+              "profile-tag";
+
+            tag.textContent =
+              interest;
+
+            previewInterests
+              .appendChild(tag);
+
+          }
+        );
+
+      } else {
+
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+        empty.className =
+          "profile-empty";
+
+        empty.textContent =
+          "Choose interests to show them here.";
+
+        previewInterests
+          .appendChild(empty);
+
+      }
+
+
+      /* LINKS */
+
+      previewLinks
+        .replaceChildren();
+
+
+      const links = [
+
+        [
+          "GitHub",
+          data.github
+        ],
+
+        [
+          "Website",
+          data.website
+        ],
+
+        [
+          "Instagram",
+          data.instagram
+        ],
+
+        [
+          "YouTube",
+          data.youtube
+        ]
+
+      ];
+
+
+      let hasLinks =
+        false;
+
+
+      links.forEach(
+        ([label,value]) => {
+
+          if (!value) {
+            return;
+          }
+
+
+          hasLinks =
+            true;
+
+
+          const link =
+            document.createElement(
+              "a"
+            );
+
+          link.className =
+            "profile-link";
+
+          link.href =
+            normalizeUrl(value);
+
+          link.target =
+            "_blank";
+
+          link.rel =
+            "noopener noreferrer";
+
+          link.textContent =
+            label;
+
+
+          previewLinks
+            .appendChild(link);
+
+        }
+      );
+
+
+      if (!hasLinks) {
+
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+        empty.className =
+          "profile-empty";
+
+        empty.textContent =
+          "Add links to show them here.";
+
+        previewLinks
+          .appendChild(empty);
+
+      }
+
+    }
+
+
+    /* =========================================================
+       LOAD INTO EDITOR
+    ========================================================== */
+
+    function loadIntoEditor() {
+
+      displayNameInput.value =
+        profile.displayName ||
+        "Yaya";
+
+
+      usernameInput.value =
+        profile.username ||
+        "yaya";
+
+
+      bioInput.value =
+        profile.bio ||
+        "Building. Creating. Exploring. Just making my corner of the internet. ∞";
+
+
+      githubInput.value =
+        profile.github ||
+        "";
+
+      websiteInput.value =
+        profile.website ||
+        "";
+
+      instagramInput.value =
+        profile.instagram ||
+        "";
+
+      youtubeInput.value =
+        profile.youtube ||
+        "";
+
+
+      /* STATUS */
+
+      const presetStatuses = [
+        "Online",
+        "Building",
+        "Creating",
+        "Exploring",
+        "Busy"
+      ];
+
+
+      if (
+        presetStatuses.includes(
+          profile.status
+        )
+      ) {
+
+        statusMode.value =
+          profile.status;
+
+        customStatus.value =
+          "";
+
+      } else {
+
+        statusMode.value =
+          "Custom";
+
+        customStatus.value =
+          profile.status ||
+          "";
+
+      }
+
+
+      updateCustomStatus();
+
+
+      /* PRESET AVATAR */
+
+      document
+        .querySelectorAll(
+          'input[name="avatar"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                profile.avatar ||
+                "∞"
+              );
+
+          }
+        );
+
+
+      /* INTERESTS */
+
+      interestInputs.forEach(
+        input => {
+
+          input.checked =
+            Array.isArray(
+              profile.interests
+            ) &&
+            profile.interests.includes(
+              input.value
+            );
+
+        }
+      );
+
+
+      /* THEME */
+
+      themeInputs.forEach(
+        input => {
+
+          input.checked =
+            input.value ===
+            (
+              profile.theme ||
+              "dark"
+            );
+
+        }
+      );
+
+
+      /* ICON TEXT */
+
+      iconText.value =
+        profile.iconText ||
+        "";
+
+
+      /* ICON SYMBOL */
+
+      document
+        .querySelectorAll(
+          'input[name="iconSymbol"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                profile.iconSymbol ||
+                "∞"
+              );
+
+          }
+        );
+
+
+      /* ICON BACKGROUND */
+
+      document
+        .querySelectorAll(
+          'input[name="iconBackground"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                profile.iconBackground ||
+                "core"
+              );
+
+          }
+        );
+
+
+      /* CUSTOM IMAGE */
+
+      if (
+        profile.customIcon
+      ) {
+
+        iconMakerImage.src =
+          profile.customIcon;
+
+        iconMakerImage.dataset.src =
+          profile.customIcon;
+
+        iconMakerPreview.classList.add(
+          "has-image"
+        );
+
+      } else {
+
+        iconMakerImage
+          .removeAttribute(
+            "src"
+          );
+
+        iconMakerImage.dataset.src =
+          "";
+
+        iconMakerPreview.classList.remove(
+          "has-image"
+        );
+
+      }
+
+
+      updateIconMaker();
+
+
+      renderPreview(
+        getFormData()
+      );
+
+
+      hasUnsavedChanges =
+        false;
+
+
+      updateSaveState();
+
+    }
+
+
+    /* =========================================================
+       DIRTY STATE
+    ========================================================== */
+
+    function markDirty() {
+
+      hasUnsavedChanges =
+        true;
+
+      updateSaveState();
+
+    }
+
+
+    function updateSaveState() {
+
+      const states = [
+
+        saveState,
+
+        bottomSaveState
+
+      ];
+
+
+      states.forEach(
+        element => {
+
+          if (!element) {
+            return;
+          }
+
+
+          if (
+            hasUnsavedChanges
+          ) {
+
+            element.classList.add(
+              "unsaved"
+            );
+
+            element.innerHTML =
+              `
+                <span class="save-state-dot"></span>
+                Unsaved changes
+              `;
+
+          } else {
+
+            element.classList.remove(
+              "unsaved"
+            );
+
+            element.innerHTML =
+              `
+                <span class="save-state-dot"></span>
+                All changes saved
+              `;
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       CHANGE HANDLER
+    ========================================================== */
+
+    function handleChange() {
+
+      updateIconMaker();
+
+
+      const data =
+        getFormData();
+
+
+      renderPreview(
+        data
+      );
+
+
+      markDirty();
+
+    }
+
+
+    /* =========================================================
+       SAVE
+    ========================================================== */
+
+    function saveProfile() {
+
+      const data =
+        getFormData();
+
+
+      profile = {
+        ...data
+      };
+
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+          profile
+        )
+      );
+
+
+      hasUnsavedChanges =
+        false;
+
+
+      updateSaveState();
+
+
+      showToast(
+        "Profile saved successfully ∞"
+      );
+
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================== */
+
+    function showToast(
+      message
+    ) {
+
+      clearTimeout(
+        toastTimer
+      );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      toastTimer =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          2400
+        );
+
+    }
+
+
+    /* =========================================================
+       PANEL SWITCHING
+    ========================================================== */
+
+    const toolButtons =
+      [
+        ...document.querySelectorAll(
+          ".tool-btn[data-panel]"
+        )
+      ];
+
+
+    const mobileButtons =
+      [
+        ...document.querySelectorAll(
+          ".mobile-tool[data-panel]"
+        )
+      ];
+
+
+    const inspectorPanels =
+      [
+        ...document.querySelectorAll(
+          ".inspector-panel"
+        )
+      ];
+
+
+    const inspectorHeading =
+      document.getElementById(
+        "inspectorHeading"
+      );
+
+
+    const inspectorSubheading =
+      document.getElementById(
+        "inspectorSubheading"
+      );
+
+
+    const panelMeta = {
+
+      design: {
+
+        title:
+          "Design",
+
+        description:
+          "Build your profile identity from one place."
+
+      },
+
+      identity: {
+
+        title:
+          "Identity",
+
+        description:
+          "Control the information people see first."
+
+      },
+
+      appearance: {
+
+        title:
+          "Appearance",
+
+        description:
+          "Choose the aura and visual mood of your profile."
+
+      },
+
+      interests: {
+
+        title:
+          "Interests",
+
+        description:
+          "Show the things that make your identity yours."
+
+      },
+
+      links: {
+
+        title:
+          "Links",
+
+        description:
+          "Give people places to discover more about you."
+
+      }
+
+    };
+
+
+    function openPanel(
+      name
+    ) {
+
+      inspectorPanels.forEach(
+        panel => {
+
+          panel.classList.toggle(
+            "active",
+            panel.dataset.inspector ===
+              name
+          );
+
+        }
+      );
+
+
+      toolButtons.forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.panel ===
+              name
+          );
+
+        }
+      );
+
+
+      mobileButtons.forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.panel ===
+              name
+          );
+
+        }
+      );
+
+
+      inspectorHeading.textContent =
+        panelMeta[name].title;
+
+
+      inspectorSubheading.textContent =
+        panelMeta[name].description;
+
+    }
+
+
+    [
+      ...toolButtons,
+      ...mobileButtons
+    ].forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            openPanel(
+              button.dataset.panel
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       NORMAL INPUTS
+    ========================================================== */
+
+    [
+      displayNameInput,
+      usernameInput,
+      bioInput,
+      statusMode,
+      customStatus,
+      githubInput,
+      websiteInput,
+      instagramInput,
+      youtubeInput
+    ].forEach(
+      input => {
+
+        input.addEventListener(
+          "input",
+          () => {
+
+            if (
+              input ===
+              statusMode
+            ) {
+
+              updateCustomStatus();
+
+            }
+
+
+            handleChange();
+
+          }
+        );
+
+
+        input.addEventListener(
+          "change",
+          () => {
+
+            if (
+              input ===
+              statusMode
+            ) {
+
+              updateCustomStatus();
+
+            }
+
+
+            handleChange();
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       AVATAR
+    ========================================================== */
+
+    document
+      .querySelectorAll(
+        'input[name="avatar"]'
+      )
+      .forEach(
+        input => {
+
+          input.addEventListener(
+            "change",
+            () => {
+
+              /*
+               * Choosing a preset avatar
+               * disables the custom image visually.
+               * The custom image itself remains stored
+               * until the user removes it.
+               */
+
+              handleChange();
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       ICON TEXT
+    ========================================================== */
+
+    iconText.addEventListener(
+      "input",
+      () => {
+
+        iconText.value =
+          iconText.value
+            .slice(0,3);
+
+        handleChange();
+
+      }
+    );
+
+
+    /* =========================================================
+       ICON SYMBOLS
+    ========================================================== */
+
+    document
+      .querySelectorAll(
+        'input[name="iconSymbol"]'
+      )
+      .forEach(
+        input => {
+
+          input.addEventListener(
+            "change",
+            handleChange
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       ICON BACKGROUNDS
+    ========================================================== */
+
+    document
+      .querySelectorAll(
+        'input[name="iconBackground"]'
+      )
+      .forEach(
+        input => {
+
+          input.addEventListener(
+            "change",
+            handleChange
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       IMAGE UPLOAD
+    ========================================================== */
+
+    customIconInput.addEventListener(
+      "change",
+      event => {
+
+        const file =
+          event.target.files?.[0];
+
+
+        if (!file) {
+          return;
+        }
+
+
+        if (
+          !file.type.startsWith(
+            "image/"
+          )
+        ) {
+
+          showToast(
+            "Please choose an image."
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * Browser-only prototype:
+         * converts the image to a data URL
+         * so it survives page reloads through
+         * localStorage.
+         */
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          () => {
+
+            const result =
+              reader.result;
+
+
+            iconMakerImage.src =
+              result;
+
+
+            iconMakerImage.dataset.src =
+              result;
+
+
+            iconMakerPreview.classList.add(
+              "has-image"
+            );
+
+
+            handleChange();
+
+
+            showToast(
+              "Your icon has been added ✦"
+            );
+
+          };
+
+
+        reader.onerror =
+          () => {
+
+            showToast(
+              "Couldn't load that image."
+            );
+
+          };
+
+
+        reader.readAsDataURL(
+          file
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       REMOVE CUSTOM IMAGE
+    ========================================================== */
+
+    removeCustomIcon.addEventListener(
+      "click",
+      () => {
+
+        iconMakerImage
+          .removeAttribute(
+            "src"
+          );
+
+
+        iconMakerImage.dataset.src =
+          "";
+
+
+        iconMakerPreview.classList.remove(
+          "has-image"
+        );
+
+
+        customIconInput.value =
+          "";
+
+
+        handleChange();
+
+
+        showToast(
+          "Custom image removed."
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       THEME
+    ========================================================== */
+
+    themeInputs.forEach(
+      input => {
+
+        input.addEventListener(
+          "change",
+          handleChange
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       INTERESTS
+    ========================================================== */
+
+    interestInputs.forEach(
+      input => {
+
+        input.addEventListener(
+          "change",
+          handleChange
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       SAVE
+    ========================================================== */
+
+    document
+      .getElementById(
+        "saveTopBtn"
+      )
+      .addEventListener(
+        "click",
+        saveProfile
+      );
+
+
+    /* =========================================================
+       QUICK PRESETS
+    ========================================================== */
+
+    document
+      .querySelectorAll(
+        "[data-quick]"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const type =
+                button.dataset.quick;
+
+
+              if (
+                type ===
+                "builder"
+              ) {
+
+                displayNameInput.value =
+                  profile.displayName ||
+                  "Yaya";
+
+
+                bioInput.value =
+                  "Building ideas, learning fast, and creating my own corner of the internet. ∞";
+
+
+                statusMode.value =
+                  "Building";
+
+
+                document
+                  .getElementById(
+                    "themeDark"
+                  )
+                  .checked =
+                  true;
+
+
+                [
+                  "Technology",
+                  "Coding",
+                  "Building",
+                  "Learning"
+                ].forEach(
+                  value => {
+
+                    const input =
+                      interestInputs.find(
+                        item =>
+                          item.value ===
+                          value
+                      );
+
+
+                    if (input) {
+                      input.checked =
+                        true;
+                    }
+
+                  }
+                );
+
+              }
+
+
+              if (
+                type ===
+                "creator"
+              ) {
+
+                bioInput.value =
+                  "Creating, experimenting, and turning ideas into something real. ✦";
+
+
+                statusMode.value =
+                  "Creating";
+
+
+                document
+                  .getElementById(
+                    "themeGreen"
+                  )
+                  .checked =
+                  true;
+
+              }
+
+
+              if (
+                type ===
+                "minimal"
+              ) {
+
+                bioInput.value =
+                  "Just being me. ∞";
+
+
+                statusMode.value =
+                  "Online";
+
+
+                document
+                  .getElementById(
+                    "themeMono"
+                  )
+                  .checked =
+                  true;
+
+              }
+
+
+              updateCustomStatus();
+
+
+              handleChange();
+
+
+              showToast(
+                "Style applied — make it yours."
+              );
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       RESET
+    ========================================================== */
+
+    document
+      .getElementById(
+        "resetBtn"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          profile = {
+
+            ...defaultProfile,
+
+            interests:
+              [
+                ...defaultProfile.interests
+              ]
+
+          };
+
+
+          loadIntoEditor();
+
+
+          markDirty();
+
+
+          showToast(
+            "Editor reset."
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       FIT
+    ========================================================== */
+
+    document
+      .getElementById(
+        "fitBtn"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelector(
+              ".canvas-area"
+            )
+            .scrollTo({
+
+              top: 0,
+
+              behavior:
+                "smooth"
+
+            });
+
+
+          showToast(
+            "Profile centered."
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       UNDO / REDO
+    ========================================================== */
+
+    const undoBtn =
+      document.getElementById(
+        "undoBtn"
+      );
+
+    const redoBtn =
+      document.getElementById(
+        "redoBtn"
+      );
+
+
+    const history = [];
+
+    const future = [];
+
+    let historyTimer =
+      null;
+
+
+    function snapshot() {
+
+      return JSON.stringify(
+        getFormData()
+      );
+
+    }
+
+
+    function pushHistory() {
+
+      const current =
+        snapshot();
+
+
+      if (
+        history.length &&
+        history[
+          history.length - 1
+        ] === current
+      ) {
+
+        return;
+
+      }
+
+
+      history.push(
+        current
+      );
+
+
+      if (
+        history.length >
+        30
+      ) {
+
+        history.shift();
+
+      }
+
+
+      future.length =
+        0;
+
+
+      updateHistoryButtons();
+
+    }
+
+
+    function updateHistoryButtons() {
+
+      undoBtn.disabled =
+        history.length <= 1;
+
+      redoBtn.disabled =
+        future.length === 0;
+
+    }
+
+
+    function restoreSnapshot(
+      raw
+    ) {
+
+      const data =
+        JSON.parse(
+          raw
+        );
+
+
+      displayNameInput.value =
+        data.displayName ||
+        "";
+
+      usernameInput.value =
+        data.username ||
+        "";
+
+      bioInput.value =
+        data.bio ||
+        "";
+
+      githubInput.value =
+        data.github ||
+        "";
+
+      websiteInput.value =
+        data.website ||
+        "";
+
+      instagramInput.value =
+        data.instagram ||
+        "";
+
+      youtubeInput.value =
+        data.youtube ||
+        "";
+
+
+      const presetStatuses = [
+        "Online",
+        "Building",
+        "Creating",
+        "Exploring",
+        "Busy"
+      ];
+
+
+      if (
+        presetStatuses.includes(
+          data.status
+        )
+      ) {
+
+        statusMode.value =
+          data.status;
+
+        customStatus.value =
+          "";
+
+      } else {
+
+        statusMode.value =
+          "Custom";
+
+        customStatus.value =
+          data.status ||
+          "";
+
+      }
+
+
+      updateCustomStatus();
+
+
+      document
+        .querySelectorAll(
+          'input[name="avatar"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                data.avatar ||
+                "∞"
+              );
+
+          }
+        );
+
+
+      interestInputs.forEach(
+        input => {
+
+          input.checked =
+            Array.isArray(
+              data.interests
+            ) &&
+            data.interests.includes(
+              input.value
+            );
+
+        }
+      );
+
+
+      themeInputs.forEach(
+        input => {
+
+          input.checked =
+            input.value ===
+            (
+              data.theme ||
+              "dark"
+            );
+
+        }
+      );
+
+
+      iconText.value =
+        data.iconText ||
+        "";
+
+
+      document
+        .querySelectorAll(
+          'input[name="iconSymbol"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                data.iconSymbol ||
+                "∞"
+              );
+
+          }
+        );
+
+
+      document
+        .querySelectorAll(
+          'input[name="iconBackground"]'
+        )
+        .forEach(
+          input => {
+
+            input.checked =
+              input.value ===
+              (
+                data.iconBackground ||
+                "core"
+              );
+
+          }
+        );
+
+
+      if (
+        data.customIcon
+      ) {
+
+        iconMakerImage.src =
+          data.customIcon;
+
+        iconMakerImage.dataset.src =
+          data.customIcon;
+
+        iconMakerPreview.classList.add(
+          "has-image"
+        );
+
+      } else {
+
+        iconMakerImage
+          .removeAttribute(
+            "src"
+          );
+
+        iconMakerImage.dataset.src =
+          "";
+
+        iconMakerPreview.classList.remove(
+          "has-image"
+        );
+
+      }
+
+
+      updateIconMaker();
+
+
+      renderPreview(
+        data
+      );
+
+    }
+
+
+    [
+      displayNameInput,
+      usernameInput,
+      bioInput,
+      customStatus,
+      githubInput,
+      websiteInput,
+      instagramInput,
+      youtubeInput,
+      iconText
+    ].forEach(
+      input => {
+
+        input.addEventListener(
+          "input",
+          () => {
+
+            clearTimeout(
+              historyTimer
+            );
+
+
+            historyTimer =
+              setTimeout(
+                () => {
+
+                  pushHistory();
+
+                },
+                350
+              );
+
+          }
+        );
+
+      }
+    );
+
+
+    [
+      statusMode,
+
+      ...interestInputs,
+
+      ...themeInputs,
+
+      ...document.querySelectorAll(
+        'input[name="avatar"]'
+      ),
+
+      ...document.querySelectorAll(
+        'input[name="iconSymbol"]'
+      ),
+
+      ...document.querySelectorAll(
+        'input[name="iconBackground"]'
+      )
+
+    ].forEach(
+      input => {
+
+        input.addEventListener(
+          "change",
+          () => {
+
+            pushHistory();
+
+          }
+        );
+
+      }
+    );
+
+
+    undoBtn.addEventListener(
+      "click",
+      () => {
+
+        if (
+          history.length <= 1
+        ) {
+
+          return;
+
+        }
+
+
+        const current =
+          history.pop();
+
+
+        future.push(
+          current
+        );
+
+
+        const previous =
+          history[
+            history.length - 1
+          ];
+
+
+        restoreSnapshot(
+          previous
+        );
+
+
+        markDirty();
+
+
+        updateHistoryButtons();
+
+      }
+    );
+
+
+    redoBtn.addEventListener(
+      "click",
+      () => {
+
+        if (
+          !future.length
+        ) {
+
+          return;
+
+        }
+
+
+        const next =
+          future.pop();
+
+
+        history.push(
+          next
+        );
+
+
+        restoreSnapshot(
+          next
+        );
+
+
+        markDirty();
+
+
+        updateHistoryButtons();
+
+      }
+    );
+
+
+    /* =========================================================
+       BEFORE UNLOAD
+    ========================================================== */
+
+    window.addEventListener(
+      "beforeunload",
+      event => {
+
+        if (
+          !hasUnsavedChanges
+        ) {
+
+          return;
+
+        }
+
+
+        event.preventDefault();
+
+        event.returnValue =
+          "";
+
+      }
+    );
+
+
+    /* =========================================================
+       CUSTOM CURSOR
+    ========================================================== */
+
+    const cursorDot =
+      document.querySelector(
+        ".cursor-dot"
+      );
+
+    const cursorRing =
+      document.querySelector(
+        ".cursor-ring"
+      );
+
+
+    if (
+      window.matchMedia(
+        "(hover:hover) and (pointer:fine)"
+      ).matches
+    ) {
+
+      document.body.classList.add(
+        "cursor-ready"
+      );
+
+
+      let mouseX =
+        0;
+
+      let mouseY =
+        0;
+
+      let ringX =
+        0;
+
+      let ringY =
+        0;
+
+
+      window.addEventListener(
+        "mousemove",
+        event => {
+
+          mouseX =
+            event.clientX;
+
+          mouseY =
+            event.clientY;
+
+
+          cursorDot.style.left =
+            mouseX + "px";
+
+          cursorDot.style.top =
+            mouseY + "px";
+
+        }
+      );
+
+
+      function animateCursor() {
+
+        ringX +=
+          (
+            mouseX -
+            ringX
+          ) *
+          .17;
+
+
+        ringY +=
+          (
+            mouseY -
+            ringY
+          ) *
+          .17;
+
+
+        cursorRing.style.left =
+          ringX + "px";
+
+        cursorRing.style.top =
+          ringY + "px";
+
+
+        requestAnimationFrame(
+          animateCursor
+        );
+
+      }
+
+
+      animateCursor();
+
+
+      document
+        .querySelectorAll(
+          "a,button,input,textarea,select,label"
+        )
+        .forEach(
+          element => {
+
+            element.addEventListener(
+              "mouseenter",
+              () => {
+
+                document.body.classList.add(
+                  "cursor-hover"
+                );
+
+              }
+            );
+
+
+            element.addEventListener(
+              "mouseleave",
+              () => {
+
+                document.body.classList.remove(
+                  "cursor-hover"
+                );
+
+              }
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =========================================================
+       SPLASH
+    ========================================================== */
+
+    const splash =
+      document.getElementById(
+        "splash"
+      );
+
+
+    const loaderStatus =
+      document.getElementById(
+        "loaderStatus"
+      );
+
+
+    const splashMessages = [
+
+      "Initializing PGH...",
+
+      "Opening your design studio...",
+
+      "Loading your identity...",
+
+      "Building your icon maker...",
+
+      "Charging the aura...",
+
+      "Almost ready..."
+
+    ];
+
+
+    let splashIndex =
+      0;
+
+
+    const splashInterval =
+      setInterval(
+        () => {
+
+          splashIndex++;
+
+
+          if (
+            splashIndex >=
+            splashMessages.length
+          ) {
+
+            clearInterval(
+              splashInterval
+            );
+
+            return;
+
+          }
+
+
+          loaderStatus.textContent =
+            splashMessages[
+              splashIndex
+            ];
+
+        },
+        310
+      );
+
+
+    setTimeout(
+      () => {
+
+        splash.classList.add(
+          "hide"
+        );
+
+      },
+      2050
+    );
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================== */
+
+    loadIntoEditor();
+
+
+    history.push(
+      snapshot()
+    );
+
+
+    updateHistoryButtons();
+
+  </script>
+
+</body>
+</html>

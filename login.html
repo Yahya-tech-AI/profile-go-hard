@@ -1,0 +1,3085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Log in to Profile Go Hard and access your identity."
+  />
+
+  <meta
+    name="theme-color"
+    content="#070809"
+  />
+
+  <title>Log in — Profile Go Hard</title>
+
+  <!-- =========================================
+       PGH LOGIN FAVICON
+       Infinity + lock identity
+  ========================================== -->
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2339f47f'/%3E%3Cstop offset='100%25' stop-color='%230da94a'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='4' result='b'/%3E%3CfeMerge%3E%3CfeMergeNode in='b'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='%23070809'/%3E%3Cpath d='M15 47 C15 28 35 28 46 43 C57 58 78 58 78 39 C78 20 57 20 46 35 C35 50 15 50 15 69 C15 88 35 88 46 73 C57 58 78 58 85 47' fill='none' stroke='url(%23g)' stroke-width='7' stroke-linecap='round' filter='url(%23glow)'/%3E%3Crect x='57' y='54' width='25' height='21' rx='5' fill='%23070809' stroke='%2339f47f' stroke-width='4'/%3E%3Cpath d='M63 54 V48 C63 41 76 41 76 48 V54' fill='none' stroke='%2339f47f' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='69.5' cy='64' r='2.5' fill='%2339f47f'/%3E%3C/svg%3E"
+  />
+
+  <style>
+    /* =========================================
+       PGH — PROFILE GO HARD
+       LOGIN PAGE
+    ========================================== */
+
+    :root {
+      --bg: #070809;
+      --bg-soft: #0d1012;
+      --bg-card: #0d1113;
+      --card: rgba(18, 22, 24, 0.78);
+
+      --text: #f5f7f8;
+      --muted: #929a9f;
+
+      --line: rgba(255, 255, 255, 0.09);
+
+      --green: #20e56b;
+      --green-light: #39f47f;
+      --green-dark: #0da94a;
+
+      --white: #ffffff;
+
+      --radius: 24px;
+    }
+
+    /* =========================================
+       RESET
+    ========================================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          rgba(32, 229, 107, 0.12),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 100% 40%,
+          rgba(32, 229, 107, 0.06),
+          transparent 30%
+        ),
+        var(--bg);
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      overflow-x: hidden;
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body.loading {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+    }
+
+    ::selection {
+      background: var(--green);
+      color: #061008;
+    }
+
+    /* =========================================
+       SCROLLBAR
+    ========================================== */
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #080a0b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background:
+        linear-gradient(
+          180deg,
+          var(--green-light),
+          var(--green-dark)
+        );
+
+      border-radius: 999px;
+
+      box-shadow:
+        0 0 14px rgba(32, 229, 107, 0.4);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--green-light);
+    }
+
+/* =====================================================
+   PGH CUSTOM CURSOR
+===================================================== */
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  pointer-events: none;
+  z-index: 999999;
+
+  opacity: 0;
+
+  transform: translate(-50%, -50%);
+}
+
+/* Small center dot */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #20e56b;
+
+  box-shadow:
+    0 0 12px rgba(32, 229, 107, 0.9),
+    0 0 25px rgba(32, 229, 107, 0.35);
+
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    opacity 0.2s ease;
+}
+
+/* Outer cursor ring */
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(57, 244, 127, 0.65);
+
+  border-radius: 50%;
+
+  background: rgba(32, 229, 107, 0.035);
+
+  box-shadow:
+    0 0 20px rgba(32, 229, 107, 0.12);
+
+  transition:
+    width 0.25s cubic-bezier(.2, .8, .2, 1),
+    height 0.25s cubic-bezier(.2, .8, .2, 1),
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.2s ease;
+}
+
+/* Hide the normal cursor */
+body.cursor-ready {
+  cursor: none;
+}
+
+body.cursor-ready a,
+body.cursor-ready button {
+  cursor: none;
+}
+
+/* Show custom cursor */
+body.cursor-ready .cursor-dot,
+body.cursor-ready .cursor-ring {
+  opacity: 1;
+}
+
+/* Hover state */
+body.cursor-hover .cursor-ring {
+  width: 52px;
+  height: 52px;
+
+  border-color: rgba(57, 244, 127, 0.95);
+
+  background: rgba(32, 229, 107, 0.08);
+
+  box-shadow:
+    0 0 30px rgba(32, 229, 107, 0.2),
+    inset 0 0 20px rgba(32, 229, 107, 0.04);
+}
+
+body.cursor-hover .cursor-dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* Don't use custom cursor on touch devices */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
+    /* =========================================
+       PGH LOGO
+    ========================================== */
+
+    .pgh-logo {
+      width: 38px;
+      height: 38px;
+
+      flex-shrink: 0;
+
+      filter:
+        drop-shadow(
+          0 0 8px
+          rgba(32, 229, 107, 0.25)
+        );
+    }
+
+    /* =========================================
+       SPLASH SCREEN
+    ========================================== */
+
+    .splash-screen {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 99999;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(32, 229, 107, 0.11),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at center,
+          rgba(32, 229, 107, 0.04),
+          transparent 65%
+        ),
+        #050607;
+
+      transition:
+        opacity 0.7s ease,
+        visibility 0.7s ease;
+    }
+
+    .splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+
+      pointer-events: none;
+    }
+
+    .splash-screen::before,
+    .splash-screen::after {
+      content: "";
+
+      position: absolute;
+
+      width: 650px;
+      height: 650px;
+
+      border:
+        1px solid
+        rgba(32, 229, 107, 0.05);
+
+      border-radius: 50%;
+
+      animation:
+        splashPulse
+        4s
+        ease-in-out
+        infinite;
+    }
+
+    .splash-screen::after {
+      width: 900px;
+      height: 900px;
+
+      animation-delay: -1s;
+    }
+
+    @keyframes splashPulse {
+      0%,
+      100% {
+        transform: scale(0.96);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+    }
+
+    .splash-content {
+      position: relative;
+
+      z-index: 2;
+
+      width: min(90%, 650px);
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      text-align: center;
+    }
+
+    .infinity-logo {
+      position: relative;
+
+      width: 130px;
+      height: 100px;
+
+      margin-bottom: 30px;
+    }
+
+    .infinity-svg {
+      width: 125px;
+      height: 95px;
+
+      overflow: visible;
+    }
+
+    .infinity-main {
+      fill: none;
+
+      stroke:
+        url(#splashGradient);
+
+      stroke-width: 7;
+
+      stroke-linecap: round;
+
+      filter:
+        drop-shadow(
+          0 0 8px
+          rgba(32, 229, 107, 0.8)
+        )
+        drop-shadow(
+          0 0 22px
+          rgba(32, 229, 107, 0.35)
+        );
+
+      stroke-dasharray: 450;
+
+      stroke-dashoffset: 450;
+
+      animation:
+        drawInfinity
+        1.4s
+        ease
+        forwards,
+
+        infinityGlow
+        2.2s
+        ease-in-out
+        infinite
+        1.4s;
+    }
+
+    .infinity-inner {
+      fill: none;
+
+      stroke:
+        rgba(57, 244, 127, 0.3);
+
+      stroke-width: 2;
+
+      stroke-linecap: round;
+
+      animation:
+        innerPulse
+        2s
+        ease-in-out
+        infinite;
+    }
+
+    .infinity-core {
+      fill: var(--green-light);
+
+      filter:
+        drop-shadow(
+          0 0 8px
+          var(--green)
+        )
+        drop-shadow(
+          0 0 18px
+          var(--green)
+        );
+
+      animation:
+        corePulse
+        1.8s
+        ease-in-out
+        infinite;
+    }
+
+    @keyframes drawInfinity {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes infinityGlow {
+      0%,
+      100% {
+        opacity: 0.8;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes innerPulse {
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes corePulse {
+      0%,
+      100% {
+        transform: scale(0.9);
+        transform-origin: center;
+      }
+
+      50% {
+        transform: scale(1.2);
+        transform-origin: center;
+      }
+    }
+
+    .splash-title {
+      font-size:
+        clamp(
+          30px,
+          6vw,
+          54px
+        );
+
+      font-weight: 900;
+
+      letter-spacing: -0.04em;
+
+      line-height: 1;
+    }
+
+    .splash-title span {
+      color: var(--green);
+
+      text-shadow:
+        0 0 25px
+        rgba(32, 229, 107, 0.3);
+    }
+
+    .splash-tagline {
+      margin-top: 15px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+
+      letter-spacing: 0.08em;
+
+      text-transform: uppercase;
+    }
+
+    .splash-status {
+      margin-top: 30px;
+
+      min-height: 20px;
+
+      color: #c8ced1;
+
+      font-size: 12px;
+
+      letter-spacing: 0.04em;
+    }
+
+    .loader {
+      width: min(320px, 70vw);
+
+      height: 4px;
+
+      margin-top: 14px;
+
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255, 255, 255, 0.08);
+    }
+
+    .loader-bar {
+      width: 0;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--green-dark),
+          var(--green-light)
+        );
+
+      box-shadow:
+        0 0 15px
+        rgba(32, 229, 107, 0.55);
+
+      animation:
+        loadBar
+        2s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        )
+        forwards;
+    }
+
+    @keyframes loadBar {
+      to {
+        width: 100%;
+      }
+    }
+
+    /* =========================================
+       SPLASH PARTICLES
+    ========================================== */
+
+    .splash-particles {
+      position: absolute;
+
+      inset: 0;
+
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+
+      width: 3px;
+      height: 3px;
+
+      border-radius: 50%;
+
+      background: var(--green-light);
+
+      box-shadow:
+        0 0 8px
+        rgba(32, 229, 107, 0.8);
+
+      animation:
+        floatParticle
+        4s
+        ease-in-out
+        infinite;
+    }
+
+    .particle:nth-child(1) {
+      left: 15%;
+      top: 30%;
+      animation-delay: -0.4s;
+    }
+
+    .particle:nth-child(2) {
+      left: 78%;
+      top: 20%;
+      animation-delay: -1.2s;
+    }
+
+    .particle:nth-child(3) {
+      left: 84%;
+      top: 65%;
+      animation-delay: -2.2s;
+    }
+
+    .particle:nth-child(4) {
+      left: 11%;
+      top: 72%;
+      animation-delay: -1.8s;
+    }
+
+    .particle:nth-child(5) {
+      left: 32%;
+      top: 17%;
+      animation-delay: -2.8s;
+    }
+
+    .particle:nth-child(6) {
+      left: 65%;
+      top: 82%;
+      animation-delay: -0.8s;
+    }
+
+    .particle:nth-child(7) {
+      left: 91%;
+      top: 42%;
+      animation-delay: -3s;
+    }
+
+    .particle:nth-child(8) {
+      left: 5%;
+      top: 45%;
+      animation-delay: -1.5s;
+    }
+
+    .particle:nth-child(9) {
+      left: 47%;
+      top: 10%;
+      animation-delay: -2.5s;
+    }
+
+    .particle:nth-child(10) {
+      left: 52%;
+      top: 90%;
+      animation-delay: -0.5s;
+    }
+
+    @keyframes floatParticle {
+      0%,
+      100% {
+        transform:
+          translateY(0)
+          scale(0.7);
+
+        opacity: 0.25;
+      }
+
+      50% {
+        transform:
+          translateY(-25px)
+          scale(1.2);
+
+        opacity: 1;
+      }
+    }
+
+    /* =========================================
+       NAVBAR
+    ========================================== */
+
+    .navbar {
+      position: fixed;
+
+      top: 18px;
+
+      left: 5%;
+      right: 5%;
+
+      z-index: 500;
+
+      max-width: 1250px;
+
+      margin: 0 auto;
+
+      padding: 11px 14px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 18px;
+
+      background:
+        rgba(7, 8, 9, 0.72);
+
+      backdrop-filter: blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      box-shadow:
+        0 15px 50px
+        rgba(0, 0, 0, 0.22);
+    }
+
+    .nav-brand {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      font-size: 14px;
+
+      font-weight: 800;
+
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand-text {
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+
+      align-items: center;
+
+      gap: 28px;
+
+      margin-left: auto;
+
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      position: relative;
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      transition:
+        color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--white);
+    }
+
+    .nav-link::after {
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+      bottom: -7px;
+
+      width: 0;
+      height: 2px;
+
+      border-radius: 999px;
+
+      background: var(--green);
+
+      transition:
+        width 0.25s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    /* =========================================
+       BUTTONS
+    ========================================== */
+
+    .btn {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-height: 42px;
+
+      padding: 0 17px;
+
+      border-radius: 12px;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform:
+        translateY(1px)
+        scale(0.98);
+    }
+
+    .btn-primary {
+      color: #061008;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green-light),
+          var(--green)
+        );
+
+      box-shadow:
+        0 10px 28px
+        rgba(32, 229, 107, 0.16);
+    }
+
+    .btn-primary:hover {
+      box-shadow:
+        0 14px 34px
+        rgba(32, 229, 107, 0.28);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+
+      border:
+        1px solid
+        var(--line);
+
+      background:
+        rgba(255, 255, 255, 0.035);
+    }
+
+    .btn-ghost:hover {
+      border-color:
+        rgba(32, 229, 107, 0.3);
+
+      background:
+        rgba(32, 229, 107, 0.05);
+    }
+
+    /* =========================================
+       MAIN
+    ========================================== */
+
+    main {
+      position: relative;
+
+      min-height: 100vh;
+
+      padding:
+        150px
+        5%
+        80px;
+    }
+
+    .login-shell {
+      max-width: 1250px;
+
+      min-height:
+        calc(100vh - 230px);
+
+      margin: 0 auto;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(420px, 0.72fr);
+
+      gap: 70px;
+
+      align-items: center;
+    }
+
+    /* =========================================
+       LEFT SIDE
+    ========================================== */
+
+    .login-intro {
+      position: relative;
+
+      max-width: 600px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      margin-bottom: 22px;
+
+      padding: 8px 11px;
+
+      border:
+        1px solid
+        rgba(32, 229, 107, 0.16);
+
+      border-radius: 999px;
+
+      color: var(--green-light);
+
+      background:
+        rgba(32, 229, 107, 0.045);
+
+      font-size: 11px;
+
+      font-weight: 900;
+
+      letter-spacing: 0.1em;
+
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      box-shadow:
+        0 0 10px
+        rgba(32, 229, 107, 0.8);
+    }
+
+    .login-intro h1 {
+      max-width: 650px;
+
+      font-size:
+        clamp(
+          46px,
+          6vw,
+          78px
+        );
+
+      line-height: 0.95;
+
+      letter-spacing: -0.055em;
+
+      font-weight: 950;
+    }
+
+    .login-intro h1 span {
+      color: var(--green);
+
+      text-shadow:
+        0 0 35px
+        rgba(32, 229, 107, 0.18);
+    }
+
+    .intro-copy {
+      max-width: 560px;
+
+      margin-top: 25px;
+
+      color: var(--muted);
+
+      font-size: 16px;
+
+      line-height: 1.7;
+    }
+
+    .identity-line {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px 16px;
+
+      margin-top: 25px;
+
+      color: #c3c9cc;
+
+      font-size: 12px;
+
+      font-weight: 700;
+    }
+
+    .identity-line span {
+      position: relative;
+    }
+
+    .identity-line
+    span:not(:last-child)::after {
+      content: "•";
+
+      position: absolute;
+
+      right: -11px;
+
+      color: var(--green-dark);
+    }
+
+    /* =========================================
+       LOGIN BENEFITS
+    ========================================== */
+
+    .benefits {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
+
+      max-width: 560px;
+
+      margin-top: 38px;
+    }
+
+    .benefit {
+      min-height: 72px;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 13px;
+
+      padding: 14px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 17px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.015)
+        );
+
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .benefit:hover {
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(32, 229, 107, 0.2);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(32, 229, 107, 0.06),
+          rgba(255, 255, 255, 0.015)
+        );
+    }
+
+    .benefit-icon {
+      width: 38px;
+      height: 38px;
+
+      flex-shrink: 0;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 12px;
+
+      color: var(--green-light);
+
+      background:
+        rgba(32, 229, 107, 0.07);
+
+      border:
+        1px solid
+        rgba(32, 229, 107, 0.12);
+
+      font-size: 17px;
+    }
+
+    .benefit-title {
+      font-size: 12px;
+
+      font-weight: 850;
+    }
+
+    .benefit-text {
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+    }
+
+    /* =========================================
+       LOCK VISUAL
+    ========================================== */
+
+    .lock-orbit {
+      position: absolute;
+
+      right: -40px;
+      top: 50%;
+
+      width: 300px;
+      height: 300px;
+
+      transform:
+        translateY(-50%);
+
+      pointer-events: none;
+
+      opacity: 0.48;
+    }
+
+    .lock-orbit::before,
+    .lock-orbit::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 20px;
+
+      border:
+        1px solid
+        rgba(32, 229, 107, 0.06);
+
+      border-radius: 50%;
+
+      animation:
+        orbitPulse
+        4s
+        ease-in-out
+        infinite;
+    }
+
+    .lock-orbit::after {
+      inset: 55px;
+
+      animation-delay: -2s;
+    }
+
+    @keyframes orbitPulse {
+      0%,
+      100% {
+        transform: scale(0.94);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: scale(1.06);
+        opacity: 0.8;
+      }
+    }
+
+    .lock-visual {
+      position: absolute;
+
+      left: 50%;
+      top: 50%;
+
+      transform:
+        translate(-50%, -50%);
+    }
+
+    .lock-svg {
+      width: 150px;
+      height: 150px;
+
+      overflow: visible;
+    }
+
+    .lock-glow {
+      fill:
+        rgba(32, 229, 107, 0.04);
+
+      stroke:
+        rgba(32, 229, 107, 0.2);
+
+      stroke-width: 1;
+
+      animation:
+        lockGlow
+        3s
+        ease-in-out
+        infinite;
+    }
+
+    .lock-body {
+      fill: #0b1010;
+
+      stroke: var(--green);
+
+      stroke-width: 4;
+
+      filter:
+        drop-shadow(
+          0 0 12px
+          rgba(32, 229, 107, 0.45)
+        );
+    }
+
+    .lock-shackle {
+      fill: none;
+
+      stroke: var(--green-light);
+
+      stroke-width: 5;
+
+      stroke-linecap: round;
+
+      filter:
+        drop-shadow(
+          0 0 10px
+          rgba(32, 229, 107, 0.35)
+        );
+    }
+
+    .lock-keyhole {
+      fill: var(--green-light);
+
+      filter:
+        drop-shadow(
+          0 0 7px
+          rgba(32, 229, 107, 0.8)
+        );
+    }
+
+    @keyframes lockGlow {
+      0%,
+      100% {
+        transform: scale(0.95);
+        opacity: 0.4;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    }
+
+    /* =========================================
+       LOGIN CARD
+    ========================================== */
+
+    .login-card {
+      position: relative;
+
+      padding: 32px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(19, 24, 26, 0.9),
+          rgba(11, 14, 16, 0.84)
+        );
+
+      backdrop-filter: blur(24px);
+
+      -webkit-backdrop-filter:
+        blur(24px);
+
+      box-shadow:
+        0 30px 90px
+        rgba(0, 0, 0, 0.35),
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.035);
+
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: "";
+
+      position: absolute;
+
+      left: 15%;
+      top: -100px;
+
+      width: 70%;
+      height: 180px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(32, 229, 107, 0.08);
+
+      filter: blur(50px);
+
+      pointer-events: none;
+    }
+
+    .card-header {
+      position: relative;
+
+      margin-bottom: 28px;
+    }
+
+    .card-header h2 {
+      font-size: 27px;
+
+      letter-spacing: -0.035em;
+
+      font-weight: 900;
+    }
+
+    .card-header p {
+      margin-top: 7px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================================
+       FORM
+    ========================================== */
+
+    .login-form {
+      position: relative;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: #dce1e3;
+
+      font-size: 11px;
+
+      font-weight: 800;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input {
+      width: 100%;
+
+      height: 50px;
+
+      padding:
+        0 14px;
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+
+      border-radius: 13px;
+
+      outline: none;
+
+      color: var(--text);
+
+      background:
+        rgba(255, 255, 255, 0.035);
+
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .input::placeholder {
+      color: #60696e;
+    }
+
+    .input:hover {
+      border-color:
+        rgba(255, 255, 255, 0.15);
+    }
+
+    .input:focus {
+      border-color:
+        rgba(32, 229, 107, 0.55);
+
+      background:
+        rgba(32, 229, 107, 0.025);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(32, 229, 107, 0.07),
+        0 0 25px
+        rgba(32, 229, 107, 0.05);
+    }
+
+    .password-wrap .input {
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+
+      right: 9px;
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      width: 35px;
+      height: 35px;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 9px;
+
+      color: var(--muted);
+
+      background: transparent;
+
+      cursor: pointer;
+
+      transition:
+        color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .toggle-password:hover {
+      color: var(--green-light);
+
+      background:
+        rgba(32, 229, 107, 0.07);
+    }
+
+    /* =========================================
+       FORM OPTIONS
+    ========================================== */
+
+    .form-options {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-top: 2px;
+    }
+
+    .remember {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      cursor: pointer;
+    }
+
+    .remember input {
+      appearance: none;
+
+      width: 16px;
+      height: 16px;
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.15);
+
+      border-radius: 5px;
+
+      background:
+        rgba(255, 255, 255, 0.03);
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .remember input:checked {
+      border-color: var(--green);
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green-light),
+          var(--green-dark)
+        );
+
+      box-shadow:
+        0 0 12px
+        rgba(32, 229, 107, 0.2);
+    }
+
+    .forgot {
+      color: var(--green-light);
+
+      font-size: 10px;
+
+      font-weight: 750;
+    }
+
+    .submit-btn {
+      width: 100%;
+
+      height: 52px;
+
+      margin-top: 24px;
+
+      border-radius: 14px;
+
+      font-size: 13px;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: -100%;
+
+      width: 70%;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+
+      transform:
+        skewX(-20deg);
+
+      transition:
+        left 0.6s ease;
+    }
+
+    .submit-btn:hover::before {
+      left: 140%;
+    }
+
+    .form-message {
+      min-height: 18px;
+
+      margin-top: 10px;
+
+      text-align: center;
+
+      font-size: 10px;
+
+      font-weight: 700;
+    }
+
+    /* =========================================
+       SIGNUP PROMPT
+    ========================================== */
+
+    .signup-prompt {
+      margin-top: 22px;
+
+      padding-top: 19px;
+
+      border-top:
+        1px solid
+        var(--line);
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    .signup-prompt a {
+      color: var(--green-light);
+
+      font-weight: 850;
+    }
+
+    .security-note {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 7px;
+
+      margin-top: 15px;
+
+      color: #626b70;
+
+      font-size: 9px;
+    }
+
+    .security-dot {
+      width: 5px;
+      height: 5px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      box-shadow:
+        0 0 7px
+        rgba(32, 229, 107, 0.7);
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================== */
+
+    footer {
+      position: relative;
+
+      max-width: 1250px;
+
+      margin: 0 auto;
+
+      padding:
+        0
+        5%
+        35px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      color: #626a6f;
+
+      font-size: 10px;
+    }
+
+    .footer-brand {
+      color: #899196;
+
+      font-weight: 800;
+    }
+
+    /* =========================================
+       TOAST
+    ========================================== */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 28px;
+
+      z-index: 1000;
+
+      transform:
+        translate(-50%, 30px);
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      padding:
+        12px 18px;
+
+      border:
+        1px solid
+        rgba(32, 229, 107, 0.2);
+
+      border-radius: 12px;
+
+      background:
+        rgba(13, 17, 19, 0.92);
+
+      backdrop-filter: blur(16px);
+
+      color: var(--text);
+
+      font-size: 11px;
+
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.3);
+
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+
+      transform:
+        translate(-50%, 0);
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================== */
+
+    @media (max-width: 1000px) {
+
+      .login-shell {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+
+        max-width: 700px;
+      }
+
+      .login-intro {
+        max-width: 100%;
+
+        text-align: center;
+      }
+
+      .login-intro h1,
+      .intro-copy {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .identity-line {
+        justify-content: center;
+      }
+
+      .benefits {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .lock-orbit {
+        display: none;
+      }
+
+      .login-card {
+        width: 100%;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 800px) {
+
+      main {
+        padding-top: 125px;
+      }
+
+      .navbar {
+        left: 3%;
+        right: 3%;
+      }
+
+      .nav-brand-text {
+        display: none;
+      }
+
+      .login-intro h1 {
+        font-size:
+          clamp(
+            42px,
+            12vw,
+            64px
+          );
+      }
+
+      .login-card {
+        padding: 25px;
+      }
+    }
+
+    @media (max-width: 560px) {
+
+      main {
+        padding:
+          115px
+          5%
+          50px;
+      }
+
+      .login-shell {
+        gap: 35px;
+      }
+
+      .benefits {
+        grid-template-columns: 1fr;
+      }
+
+      .login-card {
+        padding: 21px;
+
+        border-radius: 20px;
+      }
+
+      .card-header h2 {
+        font-size: 24px;
+      }
+
+      .form-options {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 11px;
+      }
+
+      .btn {
+        min-height: 40px;
+
+        padding: 0 13px;
+
+        font-size: 11px;
+      }
+
+      .navbar {
+        padding: 9px 10px;
+      }
+
+      footer {
+        padding:
+          0
+          5%
+          25px;
+
+        flex-direction: column;
+
+        gap: 7px;
+
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration:
+          0.001ms !important;
+
+        animation-iteration-count:
+          1 !important;
+
+        transition-duration:
+          0.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="loading">
+
+  <!-- =========================================
+       CUSTOM CURSOR
+  ========================================== -->
+
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+  <!-- =========================================
+       SPLASH SCREEN
+  ========================================== -->
+
+  <div
+    class="splash-screen"
+    id="splash"
+  >
+
+    <div class="splash-particles">
+
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+
+    </div>
+
+    <div class="splash-content">
+
+      <div class="infinity-logo">
+
+        <svg
+          class="infinity-svg"
+          viewBox="0 0 125 95"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+
+          <defs>
+
+            <linearGradient
+              id="splashGradient"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1"
+            >
+
+              <stop
+                offset="0%"
+                stop-color="#39f47f"
+              />
+
+              <stop
+                offset="100%"
+                stop-color="#0da94a"
+              />
+
+            </linearGradient>
+
+          </defs>
+
+          <path
+            class="infinity-main"
+            d="
+              M12 47
+              C12 17 43 17 62 47
+              C81 77 113 77 113 47
+              C113 17 82 17 63 47
+              C44 77 12 77 12 47
+            "
+          />
+
+          <path
+            class="infinity-inner"
+            d="
+              M20 47
+              C20 26 42 26 61 47
+              C80 68 105 68 105 47
+              C105 26 83 26 64 47
+              C45 68 20 68 20 47
+            "
+          />
+
+          <circle
+            class="infinity-core"
+            cx="62.5"
+            cy="47"
+            r="4"
+          />
+
+        </svg>
+
+      </div>
+
+      <div class="splash-title">
+        WELCOME <span>BACK</span>
+      </div>
+
+      <div class="splash-tagline">
+        Your profile. Your identity. Your aura.
+      </div>
+
+      <div
+        class="splash-status"
+        id="splashStatus"
+      >
+        Initializing PGH...
+      </div>
+
+      <div class="loader">
+
+        <div class="loader-bar"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================
+       NAVBAR
+  ========================================== -->
+
+  <nav class="navbar">
+
+    <a
+      href="index.html"
+      class="nav-brand interactive"
+      aria-label="Profile Go Hard home"
+    >
+
+      <svg
+        class="pgh-logo"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+
+        <defs>
+
+          <linearGradient
+            id="navGradient"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+
+            <stop
+              offset="0%"
+              stop-color="#25ef72"
+            />
+
+            <stop
+              offset="100%"
+              stop-color="#0a9f45"
+            />
+
+          </linearGradient>
+
+        </defs>
+
+        <path
+          d="
+            M20 50
+            C20 29 43 29 50 43
+            C57 57 80 57 80 36
+            C80 15 57 15 50 29
+            C43 43 20 43 20 64
+            C20 85 43 85 50 71
+            C57 57 80 57 80 50
+          "
+          fill="none"
+          stroke="url(#navGradient)"
+          stroke-width="8"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="50"
+          cy="50"
+          r="5"
+          fill="#25ef72"
+        />
+
+      </svg>
+
+      <span class="nav-brand-text">
+        Profile Go Hard
+      </span>
+
+    </a>
+
+    <div class="nav-links">
+
+      <a
+        href="index.html"
+        class="nav-link interactive"
+      >
+        Home
+      </a>
+
+      <a
+        href="index.html#features"
+        class="nav-link interactive"
+      >
+        Features
+      </a>
+
+      <a
+        href="index.html#preview"
+        class="nav-link interactive"
+      >
+        Preview
+      </a>
+
+    </div>
+
+    <div class="nav-actions">
+
+      <a
+        href="index.html"
+        class="btn btn-ghost interactive"
+      >
+        Back home
+      </a>
+
+      <a
+        href="signup.html"
+        class="btn btn-primary interactive"
+      >
+        Create account
+      </a>
+
+    </div>
+
+  </nav>
+
+  <!-- =========================================
+       MAIN
+  ========================================== -->
+
+  <main>
+
+    <div class="login-shell">
+
+      <!-- =====================================
+           LEFT SIDE
+      ====================================== -->
+
+      <section class="login-intro">
+
+        <div class="eyebrow">
+
+          <span class="eyebrow-dot"></span>
+
+          WELCOME BACK
+
+        </div>
+
+        <h1>
+          Your identity.
+          <span>Your space.</span>
+        </h1>
+
+        <p class="intro-copy">
+          Log back into Profile Go Hard and jump straight
+          into your personal corner of the internet.
+          Your profile is waiting for you.
+        </p>
+
+        <div class="identity-line">
+
+          <span>Your profile</span>
+          <span>Your interests</span>
+          <span>Your style</span>
+          <span>Your story</span>
+
+        </div>
+
+        <div class="benefits">
+
+          <div class="benefit interactive">
+
+            <div class="benefit-icon">
+              ∞
+            </div>
+
+            <div>
+
+              <div class="benefit-title">
+                Your identity
+              </div>
+
+              <div class="benefit-text">
+                Everything starts with you.
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="benefit interactive">
+
+            <div class="benefit-icon">
+              ✦
+            </div>
+
+            <div>
+
+              <div class="benefit-title">
+                Your profile
+              </div>
+
+              <div class="benefit-text">
+                Pick up where you left off.
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="benefit interactive">
+
+            <div class="benefit-icon">
+              ◇
+            </div>
+
+            <div>
+
+              <div class="benefit-title">
+                Your style
+              </div>
+
+              <div class="benefit-text">
+                Keep making it yours.
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="benefit interactive">
+
+            <div class="benefit-icon">
+              ↗
+            </div>
+
+            <div>
+
+              <div class="benefit-title">
+                Your story
+              </div>
+
+              <div class="benefit-text">
+                Keep building your presence.
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- LOCK VISUAL -->
+
+        <div class="lock-orbit">
+
+          <div class="lock-visual">
+
+            <svg
+              class="lock-svg"
+              viewBox="0 0 150 150"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+
+              <circle
+                class="lock-glow"
+                cx="75"
+                cy="75"
+                r="62"
+              />
+
+              <path
+                class="lock-shackle"
+                d="
+                  M52 68
+                  V48
+                  C52 18 98 18 98 48
+                  V68
+                "
+              />
+
+              <rect
+                class="lock-body"
+                x="42"
+                y="60"
+                width="66"
+                height="52"
+                rx="12"
+              />
+
+              <circle
+                class="lock-keyhole"
+                cx="75"
+                cy="82"
+                r="6"
+              />
+
+              <rect
+                class="lock-keyhole"
+                x="72"
+                y="82"
+                width="6"
+                height="16"
+                rx="3"
+              />
+
+            </svg>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- =====================================
+           RIGHT — LOGIN CARD
+      ====================================== -->
+
+      <section class="login-card">
+
+        <div class="card-header">
+
+          <h2>
+            Log in to PGH.
+          </h2>
+
+          <p>
+            Welcome back. Your identity is ready.
+          </p>
+
+        </div>
+
+        <form
+          class="login-form"
+          id="loginForm"
+          novalidate
+        >
+
+          <!-- EMAIL / USERNAME -->
+
+          <div class="field">
+
+            <label for="identifier">
+              Email or username
+            </label>
+
+            <input
+              class="input interactive"
+              id="identifier"
+              name="identifier"
+              type="text"
+              placeholder="you@example.com or @username"
+              autocomplete="username"
+              required
+            />
+
+          </div>
+
+          <!-- PASSWORD -->
+
+          <div class="field">
+
+            <label for="password">
+              Password
+            </label>
+
+            <div class="input-wrap password-wrap">
+
+              <input
+                class="input interactive"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+
+              <button
+                type="button"
+                class="toggle-password interactive"
+                id="togglePassword"
+                aria-label="Show password"
+              >
+                ◉
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- OPTIONS -->
+
+          <div class="form-options">
+
+            <label class="remember interactive">
+
+              <input
+                type="checkbox"
+                id="remember"
+              />
+
+              <span>
+                Remember me
+              </span>
+
+            </label>
+
+            <a
+              href="#"
+              class="forgot interactive"
+              id="forgotPassword"
+            >
+              Forgot password?
+            </a>
+
+          </div>
+
+          <!-- SUBMIT -->
+
+          <button
+            type="submit"
+            class="btn btn-primary submit-btn interactive"
+          >
+            Log in ∞
+          </button>
+
+          <div
+            class="form-message"
+            id="formMessage"
+            aria-live="polite"
+          ></div>
+
+        </form>
+
+        <div class="signup-prompt">
+
+          Don't have a PGH account?
+
+          <a
+            href="signup.html"
+            class="interactive"
+          >
+            Create one
+          </a>
+
+        </div>
+
+        <div class="security-note">
+
+          <span class="security-dot"></span>
+
+          Welcome back to your PGH space.
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
+
+  <footer>
+
+    <div class="footer-brand">
+      PGH — Profile Go Hard
+    </div>
+
+    <div>
+      © 2026 Profile Go Hard
+    </div>
+
+  </footer>
+
+  <!-- =========================================
+       TOAST
+  ========================================== -->
+
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+  <script>
+    /* =========================================
+       PGH LOGIN ENGINE
+    ========================================== */
+
+    const body =
+      document.body;
+
+    /* =========================================
+       CUSTOM CURSOR
+    ========================================== */
+
+    const cursorDot =
+      document.querySelector(
+        ".cursor-dot"
+      );
+
+    const cursorRing =
+      document.querySelector(
+        ".cursor-ring"
+      );
+
+    const hasFinePointer =
+      window.matchMedia(
+        "(pointer: fine)"
+      ).matches;
+
+    if (hasFinePointer) {
+
+      body.classList.add(
+        "cursor-ready"
+      );
+
+      let mouseX =
+        window.innerWidth / 2;
+
+      let mouseY =
+        window.innerHeight / 2;
+
+      let ringX = mouseX;
+      let ringY = mouseY;
+
+      document.addEventListener(
+        "mousemove",
+        (event) => {
+
+          mouseX =
+            event.clientX;
+
+          mouseY =
+            event.clientY;
+
+          cursorDot.style.left =
+            `${mouseX}px`;
+
+          cursorDot.style.top =
+            `${mouseY}px`;
+
+        }
+      );
+
+      function animateCursor() {
+
+        ringX +=
+          (mouseX - ringX) * 0.18;
+
+        ringY +=
+          (mouseY - ringY) * 0.18;
+
+        cursorRing.style.left =
+          `${ringX}px`;
+
+        cursorRing.style.top =
+          `${ringY}px`;
+
+        requestAnimationFrame(
+          animateCursor
+        );
+
+      }
+
+      animateCursor();
+
+      document
+        .querySelectorAll(
+          ".interactive"
+        )
+        .forEach(
+          (element) => {
+
+            element.addEventListener(
+              "mouseenter",
+              () => {
+
+                cursorRing.classList.add(
+                  "hover"
+                );
+
+              }
+            );
+
+            element.addEventListener(
+              "mouseleave",
+              () => {
+
+                cursorRing.classList.remove(
+                  "hover"
+                );
+
+              }
+            );
+
+          }
+        );
+
+    }
+
+    /* =========================================
+       SPLASH
+    ========================================== */
+
+    const splash =
+      document.getElementById(
+        "splash"
+      );
+
+    const splashStatus =
+      document.getElementById(
+        "splashStatus"
+      );
+
+    const statuses = [
+      "Initializing PGH...",
+      "Checking your space...",
+      "Preparing your profile...",
+      "Restoring your identity...",
+      "Almost ready..."
+    ];
+
+    let statusIndex = 0;
+
+    const statusInterval =
+      setInterval(
+        () => {
+
+          statusIndex++;
+
+          if (
+            statusIndex <
+            statuses.length
+          ) {
+
+            splashStatus.textContent =
+              statuses[
+                statusIndex
+              ];
+
+          }
+
+        },
+        390
+      );
+
+    function hideSplash() {
+
+      clearInterval(
+        statusInterval
+      );
+
+      splash.classList.add(
+        "hidden"
+      );
+
+      body.classList.remove(
+        "loading"
+      );
+
+    }
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        setTimeout(
+          hideSplash,
+          2050
+        );
+
+      }
+    );
+
+    /* =========================================
+       PASSWORD VISIBILITY
+    ========================================== */
+
+    const passwordInput =
+      document.getElementById(
+        "password"
+      );
+
+    const togglePassword =
+      document.getElementById(
+        "togglePassword"
+      );
+
+    togglePassword.addEventListener(
+      "click",
+      () => {
+
+        const showing =
+          passwordInput.type ===
+          "text";
+
+        passwordInput.type =
+          showing
+            ? "password"
+            : "text";
+
+        togglePassword.textContent =
+          showing
+            ? "◉"
+            : "◌";
+
+        togglePassword.setAttribute(
+          "aria-label",
+          showing
+            ? "Show password"
+            : "Hide password"
+        );
+
+      }
+    );
+
+    /* =========================================
+       TOAST
+    ========================================== */
+
+    const toast =
+      document.getElementById(
+        "toast"
+      );
+
+    let toastTimeout;
+
+    function showToast(message) {
+
+      toast.textContent =
+        message;
+
+      toast.classList.add(
+        "show"
+      );
+
+      clearTimeout(
+        toastTimeout
+      );
+
+      toastTimeout =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          2800
+        );
+
+    }
+
+    /* =========================================
+       LOGIN
+    ========================================== */
+
+    const loginForm =
+      document.getElementById(
+        "loginForm"
+      );
+
+    const formMessage =
+      document.getElementById(
+        "formMessage"
+      );
+
+    loginForm.addEventListener(
+      "submit",
+      (event) => {
+
+        event.preventDefault();
+
+        const identifier =
+          document
+            .getElementById(
+              "identifier"
+            )
+            .value
+            .trim();
+
+        const password =
+          passwordInput.value;
+
+        formMessage.textContent =
+          "";
+
+        formMessage.style.color =
+          "";
+
+        if (!identifier) {
+
+          formMessage.textContent =
+            "Enter your email or username.";
+
+          formMessage.style.color =
+            "#ff7777";
+
+          return;
+
+        }
+
+        if (!password) {
+
+          formMessage.textContent =
+            "Enter your password.";
+
+          formMessage.style.color =
+            "#ff7777";
+
+          return;
+
+        }
+
+        /*
+          =====================================
+          PGH FRONTEND PROTOTYPE LOGIN
+
+          The current V1 signup page stores
+          account profile information locally,
+          but intentionally does NOT store
+          passwords.
+
+          Therefore this frontend-only login
+          cannot securely authenticate a real
+          password yet.
+
+          Once PGH has its real backend,
+          replace this section with the actual
+          authentication request.
+        =====================================
+        */
+
+        const savedAccount =
+          localStorage.getItem(
+            "pgh_account"
+          );
+
+        if (!savedAccount) {
+
+          formMessage.textContent =
+            "No PGH account found on this device.";
+
+          formMessage.style.color =
+            "#ff7777";
+
+          showToast(
+            "Create your PGH account first."
+          );
+
+          return;
+
+        }
+
+        let account;
+
+        try {
+
+          account =
+            JSON.parse(
+              savedAccount
+            );
+
+        } catch {
+
+          formMessage.textContent =
+            "Your local PGH account data is invalid.";
+
+          formMessage.style.color =
+            "#ff7777";
+
+          return;
+
+        }
+
+        const cleanIdentifier =
+          identifier
+            .replace(/^@/, "")
+            .toLowerCase();
+
+        const matchesUsername =
+          account.username &&
+          account.username.toLowerCase() ===
+            cleanIdentifier;
+
+        const matchesEmail =
+          account.email &&
+          account.email.toLowerCase() ===
+            cleanIdentifier;
+
+        if (
+          !matchesUsername &&
+          !matchesEmail
+        ) {
+
+          formMessage.textContent =
+            "Account not found. Check your details.";
+
+          formMessage.style.color =
+            "#ff7777";
+
+          return;
+
+        }
+
+        /*
+          Prototype session marker.
+          No password is stored.
+        */
+
+        localStorage.setItem(
+          "pgh_session",
+          "true"
+        );
+
+        formMessage.textContent =
+          `Welcome back, ${
+            account.displayName ||
+            account.username
+          } ∞`;
+
+        formMessage.style.color =
+          "var(--green-light)";
+
+        showToast(
+          "Welcome back to PGH ∞"
+        );
+
+        setTimeout(
+          () => {
+
+            window.location.href =
+              "dashboard.html";
+
+          },
+          850
+        );
+
+      }
+    );
+
+    /* =========================================
+       FORGOT PASSWORD
+    ========================================== */
+
+    document
+      .getElementById(
+        "forgotPassword"
+      )
+      .addEventListener(
+        "click",
+        (event) => {
+
+          event.preventDefault();
+
+          showToast(
+            "Password recovery will be connected to the PGH backend."
+          );
+
+        }
+      );
+
+    /* =========================================
+       BUTTON PRESS FEEDBACK
+    ========================================== */
+
+    document
+      .querySelectorAll(
+        ".btn"
+      )
+      .forEach(
+        (button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              button.style.transform =
+                "translateY(1px) scale(0.98)";
+
+              setTimeout(
+                () => {
+
+                  button.style.transform =
+                    "";
+
+                },
+                130
+              );
+
+            }
+          );
+
+        }
+      );
+
+  </script>
+
+</body>
+</html>

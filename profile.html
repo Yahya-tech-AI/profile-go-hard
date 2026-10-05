@@ -1,0 +1,3899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Profile Go Hard — A personal profile built around your identity."
+  >
+
+  <meta name="theme-color" content="#070809">
+
+  <title>Profile — Profile Go Hard</title>
+
+  <!-- =====================================================
+       PROFILE SVG FAVICON
+       Human / profile identity icon
+  ====================================================== -->
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='20' y1='15' x2='80' y2='90'%3E%3Cstop stop-color='%2339f47f'/%3E%3Cstop offset='1' stop-color='%230da94a'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='3' result='b'/%3E%3CfeMerge%3E%3CfeMergeNode in='b'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Crect width='100' height='100' rx='26' fill='%23070809'/%3E%3Ccircle cx='50' cy='32' r='15' fill='url(%23g)' filter='url(%23glow)'/%3E%3Cpath d='M19 83C21 61 32 50 50 50C68 50 79 61 81 83C81.5 88 77 91 72 91H28C23 91 18.5 88 19 83Z' fill='url(%23g)' filter='url(%23glow)'/%3E%3Ccircle cx='50' cy='50' r='42' stroke='%2339f47f' stroke-opacity='.18' stroke-width='2'/%3E%3C/svg%3E"
+  >
+
+  <style>
+
+    /* =====================================================
+       ROOT
+    ====================================================== */
+
+    :root {
+      --bg: #070809;
+      --bg-soft: #0b0f10;
+      --bg-card: #0d1113;
+
+      --text: #f5f7f8;
+      --muted: #929a9f;
+      --muted-2: #697276;
+
+      --line: rgba(255,255,255,.09);
+
+      --green: #20e56b;
+      --green-light: #39f47f;
+      --green-dark: #0da94a;
+
+      --white: #ffffff;
+
+      --profile-accent: #20e56b;
+      --profile-accent-light: #39f47f;
+      --profile-accent-dark: #0da94a;
+
+      --profile-glow: rgba(32,229,107,.18);
+
+      --radius: 24px;
+    }
+
+
+    /* =====================================================
+       RESET
+    ====================================================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+
+      scrollbar-width: thin;
+      scrollbar-color:
+        var(--profile-accent)
+        #080a0b;
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          var(--profile-glow),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 35%,
+          rgba(32,229,107,.045),
+          transparent 25%
+        ),
+        var(--bg);
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      overflow-x: hidden;
+    }
+
+    body.loading {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* =====================================================
+       SELECTION
+    ====================================================== */
+
+    ::selection {
+      background: var(--profile-accent);
+      color: #031108;
+    }
+
+    ::-moz-selection {
+      background: var(--profile-accent);
+      color: #031108;
+    }
+
+
+    /* =====================================================
+       SCROLLBAR
+    ====================================================== */
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #080a0b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background:
+        linear-gradient(
+          180deg,
+          var(--profile-accent-light),
+          var(--profile-accent-dark)
+        );
+
+      border-radius: 999px;
+
+      border:
+        2px solid
+        #080a0b;
+
+      box-shadow:
+        0 0 12px
+        var(--profile-glow);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background:
+        linear-gradient(
+          180deg,
+          #62ff9a,
+          var(--profile-accent)
+        );
+    }
+
+
+    /* =====================================================
+       CUSTOM CURSOR
+    ====================================================== */
+
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      pointer-events: none;
+
+      z-index: 999999;
+
+      opacity: 0;
+
+      transform:
+        translate(-50%, -50%);
+    }
+
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background:
+        var(--profile-accent);
+
+      box-shadow:
+        0 0 12px
+        rgba(32,229,107,.9),
+        0 0 25px
+        rgba(32,229,107,.35);
+
+      transition:
+        width .18s ease,
+        height .18s ease,
+        opacity .2s ease;
+    }
+
+    .cursor-ring {
+      width: 34px;
+      height: 34px;
+
+      border:
+        1px solid
+        rgba(57,244,127,.65);
+
+      border-radius: 50%;
+
+      background:
+        rgba(32,229,107,.035);
+
+      box-shadow:
+        0 0 20px
+        rgba(32,229,107,.12);
+
+      transition:
+        width .25s cubic-bezier(.2,.8,.2,1),
+        height .25s cubic-bezier(.2,.8,.2,1),
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease,
+        opacity .2s ease;
+    }
+
+    body.cursor-ready {
+      cursor: none;
+    }
+
+    body.cursor-ready a,
+    body.cursor-ready button {
+      cursor: none;
+    }
+
+    body.cursor-ready .cursor-dot,
+    body.cursor-ready .cursor-ring {
+      opacity: 1;
+    }
+
+    body.cursor-hover .cursor-ring {
+      width: 52px;
+      height: 52px;
+
+      border-color:
+        rgba(57,244,127,.95);
+
+      background:
+        rgba(32,229,107,.08);
+
+      box-shadow:
+        0 0 30px
+        rgba(32,229,107,.2),
+        inset 0 0 20px
+        rgba(32,229,107,.04);
+    }
+
+    body.cursor-hover .cursor-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+
+    /* =====================================================
+       TOP NAV
+    ====================================================== */
+
+    .navbar {
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+
+      z-index: 1000;
+
+      padding:
+        17px 5%;
+
+      background:
+        rgba(7,8,9,.72);
+
+      backdrop-filter:
+        blur(20px);
+
+      -webkit-backdrop-filter:
+        blur(20px);
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.055);
+    }
+
+    .nav-inner {
+      max-width: 1180px;
+
+      margin: auto;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      font-weight: 900;
+
+      letter-spacing: -.7px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      font-size: 17px;
+    }
+
+    .brand-text span {
+      color:
+        var(--profile-accent);
+    }
+
+    .nav-actions {
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+    }
+
+
+    /* =====================================================
+       NAV BUTTONS
+    ====================================================== */
+
+    .nav-btn {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-height: 39px;
+
+      padding:
+        9px 14px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 11px;
+
+      background:
+        rgba(255,255,255,.025);
+
+      color:
+        #dce1e3;
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+    }
+
+    .nav-btn:hover {
+      transform:
+        translateY(-2px);
+
+      background:
+        rgba(255,255,255,.055);
+
+      border-color:
+        rgba(255,255,255,.14);
+
+      color:
+        var(--white);
+    }
+
+    .nav-btn.green {
+      color:
+        #031108;
+
+      background:
+        var(--profile-accent);
+
+      border-color:
+        var(--profile-accent);
+
+      box-shadow:
+        0 7px 24px
+        var(--profile-glow);
+    }
+
+    .nav-btn.green:hover {
+      background:
+        var(--profile-accent-light);
+    }
+
+
+    /* =====================================================
+       SPLASH
+    ====================================================== */
+
+    .splash {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 99998;
+
+      display: grid;
+
+      place-items: center;
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          var(--profile-glow),
+          transparent 28%
+        ),
+        #070809;
+
+      opacity: 1;
+      visibility: visible;
+
+      transition:
+        opacity .75s ease,
+        visibility .75s ease;
+    }
+
+    .splash.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-aura {
+      position: absolute;
+
+      width: 300px;
+      height: 300px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(32,229,107,.16),
+          rgba(32,229,107,.04) 42%,
+          transparent 72%
+        );
+
+      filter:
+        blur(4px);
+
+      animation:
+        splashPulse
+        2.4s
+        ease-in-out
+        infinite;
+    }
+
+    .splash-ring {
+      position: absolute;
+
+      width: 210px;
+      height: 210px;
+
+      border:
+        1px solid
+        rgba(32,229,107,.16);
+
+      border-radius: 50%;
+
+      animation:
+        splashRing
+        2.5s
+        ease-out
+        infinite;
+    }
+
+    .splash-content {
+      position: relative;
+
+      z-index: 2;
+
+      width:
+        min(420px,85%);
+
+      text-align: center;
+
+      animation:
+        splashEnter
+        .85s
+        cubic-bezier(.2,.8,.2,1);
+    }
+
+
+    /* =====================================================
+       SPLASH HUMAN ICON
+    ====================================================== */
+
+    .splash-avatar {
+      width: 116px;
+      height: 116px;
+
+      margin:
+        0 auto 25px;
+
+      display: grid;
+
+      place-items: center;
+
+      position: relative;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 35% 20%,
+          rgba(255,255,255,.09),
+          transparent 28%
+        ),
+        rgba(32,229,107,.055);
+
+      border:
+        1px solid
+        rgba(57,244,127,.2);
+
+      box-shadow:
+        0 0 70px
+        rgba(32,229,107,.18);
+
+      animation:
+        splashAvatar
+        2s
+        ease-in-out
+        infinite;
+    }
+
+    .splash-avatar::before {
+      content: "";
+
+      position: absolute;
+
+      inset: -18px;
+
+      border:
+        1px solid
+        rgba(32,229,107,.1);
+
+      border-radius: 50%;
+
+      animation:
+        splashOrbit
+        4s
+        linear
+        infinite;
+    }
+
+    .human-svg {
+      width: 72px;
+      height: 72px;
+
+      overflow: visible;
+
+      filter:
+        drop-shadow(
+          0 0 10px
+          rgba(32,229,107,.45)
+        )
+        drop-shadow(
+          0 0 25px
+          rgba(32,229,107,.18)
+        );
+    }
+
+    .splash-title {
+      font-size:
+        clamp(24px,5vw,31px);
+
+      font-weight: 950;
+
+      letter-spacing:
+        -1.3px;
+    }
+
+    .splash-title span {
+      color:
+        var(--profile-accent);
+    }
+
+    .splash-subtitle {
+      margin-top: 9px;
+
+      color:
+        var(--muted-2);
+
+      font-size: 12px;
+
+      font-weight: 650;
+    }
+
+    .splash-loader {
+      width: 220px;
+      height: 4px;
+
+      margin:
+        29px auto 14px;
+
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255,255,255,.07);
+    }
+
+    .splash-loader-bar {
+      width: 38%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--profile-accent-dark),
+          var(--profile-accent-light)
+        );
+
+      box-shadow:
+        0 0 15px
+        rgba(32,229,107,.65);
+
+      animation:
+        loadingSlide
+        1.35s
+        cubic-bezier(.4,0,.2,1)
+        infinite;
+    }
+
+    .splash-status {
+      color:
+        var(--muted-2);
+
+      font-size: 11px;
+
+      font-weight: 650;
+
+      letter-spacing: .4px;
+
+      transition:
+        opacity .2s ease;
+    }
+
+
+    /* =====================================================
+       MAIN
+    ====================================================== */
+
+    main {
+      position: relative;
+
+      max-width: 980px;
+
+      margin: auto;
+
+      padding:
+        125px 20px 90px;
+    }
+
+
+    /* =====================================================
+       PROFILE HERO
+    ====================================================== */
+
+    .profile-shell {
+      position: relative;
+
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius:
+        30px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,22,24,.9),
+          rgba(9,12,13,.92)
+        );
+
+      box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.42);
+
+      isolation: isolate;
+    }
+
+    .profile-shell::before {
+      content: "";
+
+      position: absolute;
+
+      width: 500px;
+      height: 500px;
+
+      left: 50%;
+      top: -260px;
+
+      transform:
+        translateX(-50%);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          var(--profile-glow),
+          transparent 68%
+        );
+
+      pointer-events: none;
+
+      z-index: -1;
+    }
+
+
+    /* =====================================================
+       COVER
+    ====================================================== */
+
+    .cover {
+      height: 265px;
+
+      position: relative;
+
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at 18% 65%,
+          rgba(32,229,107,.35),
+          transparent 22%
+        ),
+        radial-gradient(
+          circle at 80% 20%,
+          rgba(255,255,255,.08),
+          transparent 22%
+        ),
+        radial-gradient(
+          circle at 50% 110%,
+          rgba(32,229,107,.12),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          #101715,
+          #07110c 48%,
+          #101313
+        );
+    }
+
+    .cover::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          transparent 38%,
+          rgba(32,229,107,.065) 38%,
+          rgba(32,229,107,.065) 39%,
+          transparent 39%
+        );
+
+      background-size:
+        38px 38px;
+
+      opacity: .9;
+    }
+
+    .cover::after {
+      content: "∞";
+
+      position: absolute;
+
+      right: 6%;
+      bottom: -75px;
+
+      font-size: 230px;
+
+      font-weight: 950;
+
+      color:
+        var(--profile-accent);
+
+      opacity: .045;
+
+      transform:
+        rotate(-8deg);
+    }
+
+    .cover-glow {
+      position: absolute;
+
+      width: 240px;
+      height: 240px;
+
+      left: 50%;
+      top: 50%;
+
+      transform:
+        translate(-50%,-50%);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(32,229,107,.15),
+          transparent 70%
+        );
+
+      filter:
+        blur(15px);
+    }
+
+
+    /* =====================================================
+       PROFILE CONTENT
+    ====================================================== */
+
+    .profile-content {
+      position: relative;
+
+      padding:
+        0 48px 48px;
+    }
+
+
+    /* =====================================================
+       AVATAR
+    ====================================================== */
+
+    .avatar-wrap {
+      position: relative;
+
+      width: 156px;
+      height: 156px;
+
+      margin-top:
+        -78px;
+
+      z-index: 5;
+    }
+
+    .avatar {
+      position: relative;
+
+      width: 156px;
+      height: 156px;
+
+      display: grid;
+
+      place-items: center;
+
+      overflow: hidden;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 35% 20%,
+          rgba(255,255,255,.11),
+          transparent 25%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          var(--profile-glow),
+          transparent 65%
+        ),
+        linear-gradient(
+          145deg,
+          #17201c,
+          #080b0c
+        );
+
+      border:
+        6px solid
+        #0d1113;
+
+      box-shadow:
+        0 20px 55px
+        rgba(0,0,0,.5),
+        0 0 55px
+        var(--profile-glow);
+
+      isolation: isolate;
+
+      animation:
+        avatarFloat
+        4.5s
+        ease-in-out
+        infinite;
+    }
+
+    .avatar::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 7px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(57,244,127,.18);
+
+      background:
+        radial-gradient(
+          circle at 50% 25%,
+          rgba(255,255,255,.035),
+          transparent 45%
+        );
+
+      z-index: 0;
+    }
+
+    .avatar::after {
+      content: "";
+
+      position: absolute;
+
+      inset: -35px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          var(--profile-glow),
+          transparent 65%
+        );
+
+      filter:
+        blur(14px);
+
+      z-index: -1;
+    }
+
+
+    /* =====================================================
+       DEFAULT HUMAN PROFILE ICON
+    ====================================================== */
+
+    .profile-human-icon {
+      position: relative;
+
+      width: 94px;
+      height: 94px;
+
+      z-index: 2;
+
+      overflow: visible;
+
+      filter:
+        drop-shadow(
+          0 0 10px
+          var(--profile-accent)
+        )
+        drop-shadow(
+          0 0 24px
+          var(--profile-glow)
+        );
+
+      animation:
+        iconPulse
+        3.5s
+        ease-in-out
+        infinite;
+    }
+
+    .custom-avatar-image {
+      position: relative;
+
+      z-index: 2;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      border-radius: 50%;
+    }
+
+
+    /* =====================================================
+       ONLINE INDICATOR
+    ====================================================== */
+
+    .online-indicator {
+      position: absolute;
+
+      right: 5px;
+      bottom: 12px;
+
+      width: 24px;
+      height: 24px;
+
+      border-radius: 50%;
+
+      background:
+        var(--profile-accent);
+
+      border:
+        5px solid
+        #0d1113;
+
+      box-shadow:
+        0 0 15px
+        var(--profile-accent);
+
+      z-index: 5;
+
+      animation:
+        onlinePulse
+        2s
+        ease-in-out
+        infinite;
+    }
+
+
+    /* =====================================================
+       PROFILE HEADER
+    ====================================================== */
+
+    .profile-heading {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+
+      gap: 25px;
+
+      margin-top: 23px;
+    }
+
+    .identity {
+      min-width: 0;
+    }
+
+    .name-row {
+      display: flex;
+
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 9px;
+    }
+
+    .profile-name {
+      font-size:
+        clamp(30px,5vw,44px);
+
+      line-height: 1;
+
+      letter-spacing:
+        -2px;
+
+      font-weight: 950;
+
+      overflow-wrap: anywhere;
+    }
+
+    .verified {
+      width: 22px;
+      height: 22px;
+
+      display: grid;
+
+      place-items: center;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      background:
+        var(--profile-accent);
+
+      color:
+        #031108;
+
+      font-size: 12px;
+
+      font-weight: 950;
+
+      box-shadow:
+        0 0 18px
+        var(--profile-glow);
+    }
+
+    .username {
+      margin-top: 8px;
+
+      color:
+        var(--profile-accent-light);
+
+      font-size: 14px;
+
+      font-weight: 800;
+    }
+
+    .status {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      margin-top: 12px;
+
+      padding:
+        7px 10px;
+
+      border:
+        1px solid
+        rgba(32,229,107,.14);
+
+      border-radius: 999px;
+
+      background:
+        rgba(32,229,107,.045);
+
+      color:
+        #a5afb3;
+
+      font-size: 11px;
+
+      font-weight: 750;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background:
+        var(--profile-accent);
+
+      box-shadow:
+        0 0 10px
+        var(--profile-accent);
+    }
+
+
+    /* =====================================================
+       PROFILE ACTIONS
+    ====================================================== */
+
+    .profile-actions {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      flex-shrink: 0;
+    }
+
+    .action-btn {
+      min-height: 40px;
+
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 7px;
+
+      padding:
+        9px 14px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 11px;
+
+      background:
+        rgba(255,255,255,.025);
+
+      color:
+        #dce1e3;
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+    }
+
+    .action-btn:hover {
+      transform:
+        translateY(-2px);
+
+      background:
+        rgba(255,255,255,.06);
+
+      border-color:
+        rgba(255,255,255,.15);
+    }
+
+    .action-btn.primary {
+      color:
+        #031108;
+
+      background:
+        var(--profile-accent);
+
+      border-color:
+        var(--profile-accent);
+
+      box-shadow:
+        0 8px 26px
+        var(--profile-glow);
+    }
+
+    .action-btn.primary:hover {
+      background:
+        var(--profile-accent-light);
+    }
+
+
+    /* =====================================================
+       BIO
+    ====================================================== */
+
+    .bio {
+      max-width: 720px;
+
+      margin-top: 24px;
+
+      color:
+        #b7bec1;
+
+      font-size: 15px;
+
+      line-height: 1.75;
+
+      overflow-wrap: anywhere;
+    }
+
+
+    /* =====================================================
+       INTERESTS
+    ====================================================== */
+
+    .interests {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      margin-top: 22px;
+    }
+
+    .interest {
+      display: inline-flex;
+
+      align-items: center;
+
+      padding:
+        8px 11px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08);
+
+      border-radius: 999px;
+
+      background:
+        rgba(255,255,255,.025);
+
+      color:
+        #c7ced1;
+
+      font-size: 12px;
+
+      font-weight: 750;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+    }
+
+    .interest:hover {
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(32,229,107,.2);
+
+      background:
+        rgba(32,229,107,.045);
+    }
+
+
+    /* =====================================================
+       DIVIDER
+    ====================================================== */
+
+    .profile-divider {
+      height: 1px;
+
+      margin:
+        34px 0 25px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.1),
+          transparent
+        );
+    }
+
+
+    /* =====================================================
+       LINKS
+    ====================================================== */
+
+    .links-heading {
+      color:
+        #788286;
+
+      font-size: 11px;
+
+      font-weight: 900;
+
+      letter-spacing: 1.2px;
+
+      text-transform: uppercase;
+
+      margin-bottom: 12px;
+    }
+
+    .links-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+      gap: 10px;
+    }
+
+    .profile-link {
+      min-height: 58px;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      padding:
+        12px 14px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.07);
+
+      border-radius: 15px;
+
+      background:
+        rgba(255,255,255,.02);
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+    }
+
+    .profile-link:hover {
+      transform:
+        translateY(-3px);
+
+      border-color:
+        rgba(32,229,107,.2);
+
+      background:
+        rgba(32,229,107,.035);
+    }
+
+    .link-icon {
+      width: 34px;
+      height: 34px;
+
+      display: grid;
+
+      place-items: center;
+
+      flex-shrink: 0;
+
+      border-radius: 10px;
+
+      background:
+        rgba(32,229,107,.07);
+
+      color:
+        var(--profile-accent);
+
+      font-size: 15px;
+
+      font-weight: 900;
+    }
+
+    .link-info {
+      min-width: 0;
+    }
+
+    .link-name {
+      color:
+        #e3e7e8;
+
+      font-size: 12px;
+
+      font-weight: 850;
+    }
+
+    .link-value {
+      margin-top: 3px;
+
+      color:
+        var(--muted);
+
+      font-size: 11px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ====================================================== */
+
+    .empty-state {
+      display: none;
+
+      padding:
+        80px 30px;
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+
+      margin:
+        0 auto 20px;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 24px;
+
+      border:
+        1px solid
+        rgba(32,229,107,.16);
+
+      background:
+        rgba(32,229,107,.05);
+
+      color:
+        var(--profile-accent);
+
+      font-size: 30px;
+    }
+
+    .empty-state h2 {
+      font-size: 28px;
+
+      letter-spacing:
+        -1px;
+
+      margin-bottom: 9px;
+    }
+
+    .empty-state p {
+      max-width: 500px;
+
+      margin:
+        0 auto 25px;
+
+      color:
+        var(--muted);
+
+      line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ====================================================== */
+
+    footer {
+      max-width: 980px;
+
+      margin:
+        0 auto;
+
+      padding:
+        0 20px 35px;
+    }
+
+    .footer-inner {
+      padding-top: 25px;
+
+      border-top:
+        1px solid
+        var(--line);
+
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      color:
+        var(--muted);
+
+      font-size: 12px;
+    }
+
+    .footer-brand {
+      color:
+        var(--text);
+
+      font-weight: 900;
+    }
+
+    .footer-brand span {
+      color:
+        var(--profile-accent);
+    }
+
+
+    /* =====================================================
+       TOAST
+    ====================================================== */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      z-index: 100000;
+
+      transform:
+        translate(-50%, 20px);
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      padding:
+        12px 17px;
+
+      border:
+        1px solid
+        rgba(32,229,107,.2);
+
+      border-radius: 13px;
+
+      background:
+        rgba(10,14,12,.92);
+
+      backdrop-filter:
+        blur(15px);
+
+      -webkit-backdrop-filter:
+        blur(15px);
+
+      color:
+        #e7eeea;
+
+      font-size: 12px;
+
+      font-weight: 750;
+
+      box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.4),
+        0 0 25px
+        rgba(32,229,107,.08);
+
+      transition:
+        opacity .25s ease,
+        transform .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+
+      transform:
+        translate(-50%, 0);
+    }
+
+
+    /* =====================================================
+       ANIMATIONS
+    ====================================================== */
+
+    @keyframes splashEnter {
+      from {
+        opacity: 0;
+        transform:
+          translateY(22px)
+          scale(.94);
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+    @keyframes splashPulse {
+      0%,100% {
+        transform: scale(.78);
+        opacity: .45;
+      }
+
+      50% {
+        transform: scale(1.22);
+        opacity: 1;
+      }
+    }
+
+    @keyframes splashRing {
+      0% {
+        transform: scale(.72);
+        opacity: .7;
+      }
+
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes splashAvatar {
+      0%,100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.045);
+      }
+    }
+
+    @keyframes splashOrbit {
+      from {
+        transform:
+          rotate(0deg)
+          scaleX(1.35);
+      }
+
+      to {
+        transform:
+          rotate(360deg)
+          scaleX(1.35);
+      }
+    }
+
+    @keyframes loadingSlide {
+      0% {
+        transform:
+          translateX(-140%);
+      }
+
+      50% {
+        transform:
+          translateX(190%);
+      }
+
+      100% {
+        transform:
+          translateX(420%);
+      }
+    }
+
+    @keyframes avatarFloat {
+      0%,100% {
+        transform:
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          translateY(-4px);
+      }
+    }
+
+    @keyframes iconPulse {
+      0%,100% {
+        transform:
+          scale(1);
+      }
+
+      50% {
+        transform:
+          scale(1.035);
+      }
+    }
+
+    @keyframes onlinePulse {
+      0%,100% {
+        box-shadow:
+          0 0 10px
+          var(--profile-accent);
+      }
+
+      50% {
+        box-shadow:
+          0 0 22px
+          var(--profile-accent);
+      }
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 800px) {
+
+      .navbar {
+        padding:
+          14px 18px;
+      }
+
+      .brand-text {
+        font-size: 15px;
+      }
+
+      .nav-btn.dashboard {
+        display: none;
+      }
+
+      main {
+        padding:
+          105px 14px 65px;
+      }
+
+      .profile-shell {
+        border-radius:
+          24px;
+      }
+
+      .cover {
+        height: 215px;
+      }
+
+      .profile-content {
+        padding:
+          0 27px 35px;
+      }
+
+      .avatar-wrap,
+      .avatar {
+        width: 135px;
+        height: 135px;
+      }
+
+      .avatar-wrap {
+        margin-top:
+          -67px;
+      }
+
+      .profile-heading {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .profile-actions {
+        width: 100%;
+      }
+
+      .action-btn {
+        flex: 1;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+
+    @media (max-width: 520px) {
+
+      .brand-text {
+        display: none;
+      }
+
+      .nav-actions {
+        gap: 6px;
+      }
+
+      .nav-btn {
+        padding:
+          8px 10px;
+
+        font-size: 11px;
+      }
+
+      .nav-btn.edit {
+        display: none;
+      }
+
+      main {
+        padding:
+          92px 10px 55px;
+      }
+
+      .profile-shell {
+        border-radius:
+          21px;
+      }
+
+      .cover {
+        height: 175px;
+      }
+
+      .profile-content {
+        padding:
+          0 19px 28px;
+      }
+
+      .avatar-wrap,
+      .avatar {
+        width: 112px;
+        height: 112px;
+      }
+
+      .avatar-wrap {
+        margin-top:
+          -56px;
+      }
+
+      .profile-human-icon {
+        width: 72px;
+        height: 72px;
+      }
+
+      .online-indicator {
+        width: 20px;
+        height: 20px;
+
+        right: 2px;
+        bottom: 8px;
+
+        border-width: 4px;
+      }
+
+      .profile-name {
+        font-size: 31px;
+
+        letter-spacing:
+          -1.5px;
+      }
+
+      .bio {
+        font-size: 14px;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
+    }
+
+
+    /* =====================================================
+       REDUCED MOTION
+    ====================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration:
+          .01ms !important;
+
+        animation-iteration-count:
+          1 !important;
+
+        transition-duration:
+          .01ms !important;
+
+        scroll-behavior:
+          auto !important;
+      }
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none !important;
+      }
+
+    }
+
+
+    /* =====================================================
+       TOUCH DEVICES
+    ====================================================== */
+
+    @media (hover: none), (pointer: coarse) {
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body class="loading">
+
+  <!-- =====================================================
+       CUSTOM CURSOR
+  ====================================================== -->
+
+  <div
+    class="cursor-dot"
+    id="cursorDot"
+  ></div>
+
+  <div
+    class="cursor-ring"
+    id="cursorRing"
+  ></div>
+
+
+  <!-- =====================================================
+       SPLASH
+  ====================================================== -->
+
+  <div
+    class="splash"
+    id="splash"
+    aria-label="Loading profile"
+  >
+
+    <div class="splash-aura"></div>
+
+    <div class="splash-ring"></div>
+
+    <div class="splash-content">
+
+      <div class="splash-avatar">
+
+        <svg
+          class="human-svg"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+
+          <defs>
+
+            <linearGradient
+              id="splashHumanGradient"
+              x1="20"
+              y1="12"
+              x2="80"
+              y2="90"
+              gradientUnits="userSpaceOnUse"
+            >
+
+              <stop
+                offset="0"
+                stop-color="#72ffa6"
+              />
+
+              <stop
+                offset="0.48"
+                stop-color="#39f47f"
+              />
+
+              <stop
+                offset="1"
+                stop-color="#0da94a"
+              />
+
+            </linearGradient>
+
+          </defs>
+
+
+          <circle
+            cx="50"
+            cy="28"
+            r="16"
+            fill="url(#splashHumanGradient)"
+          />
+
+
+          <path
+            d="
+              M18 84
+              C20 61
+              31 49
+              50 49
+              C69 49
+              80 61
+              82 84
+              C82.4 88.5
+              78.5 91
+              73 91
+              H27
+              C21.5 91
+              17.6 88.5
+              18 84Z
+            "
+            fill="url(#splashHumanGradient)"
+          />
+
+        </svg>
+
+      </div>
+
+
+      <div class="splash-title">
+        PROFILE <span>GO HARD</span>
+      </div>
+
+
+      <div class="splash-subtitle">
+        Your profile. Your identity. Your aura.
+      </div>
+
+
+      <div class="splash-loader">
+        <div class="splash-loader-bar"></div>
+      </div>
+
+
+      <div
+        class="splash-status"
+        id="splashStatus"
+      >
+        Loading profile...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
+
+  <nav class="navbar">
+
+    <div class="nav-inner">
+
+      <a
+        href="index.html"
+        class="brand"
+        aria-label="Profile Go Hard home"
+      >
+
+        <svg
+          class="brand-mark"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+
+          <defs>
+
+            <linearGradient
+              id="brandGradient"
+              x1="0"
+              y1="0"
+              x2="100"
+              y2="100"
+              gradientUnits="userSpaceOnUse"
+            >
+
+              <stop
+                offset="0"
+                stop-color="#39f47f"
+              />
+
+              <stop
+                offset="1"
+                stop-color="#0da94a"
+              />
+
+            </linearGradient>
+
+          </defs>
+
+
+          <rect
+            width="100"
+            height="100"
+            rx="25"
+            fill="#0b100d"
+          />
+
+
+          <path
+            d="
+              M25 50
+              C25 31 42 21 50 38
+              C58 21 75 31 75 50
+              C75 69 58 79 50 62
+              C42 79 25 69 25 50Z
+            "
+            stroke="url(#brandGradient)"
+            stroke-width="9"
+            stroke-linecap="round"
+          />
+
+
+          <circle
+            cx="50"
+            cy="50"
+            r="5"
+            fill="#20e56b"
+          />
+
+        </svg>
+
+
+        <span class="brand-text">
+          Profile <span>Go Hard</span>
+        </span>
+
+      </a>
+
+
+      <div class="nav-actions">
+
+        <a
+          href="dashboard.html"
+          class="nav-btn dashboard"
+        >
+          Dashboard
+        </a>
+
+
+        <a
+          href="editor.html"
+          class="nav-btn edit"
+        >
+          Edit profile
+        </a>
+
+
+        <button
+          class="nav-btn green"
+          id="shareTop"
+          type="button"
+        >
+          Share
+        </button>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main>
+
+    <section
+      class="profile-shell"
+      id="profileShell"
+    >
+
+      <!-- COVER -->
+
+      <div class="cover">
+
+        <div class="cover-glow"></div>
+
+      </div>
+
+
+      <!-- PROFILE -->
+
+      <div class="profile-content">
+
+
+        <!-- AVATAR -->
+
+        <div class="avatar-wrap">
+
+          <div
+            class="avatar"
+            id="avatar"
+            aria-label="Profile avatar"
+          >
+
+            <!-- Filled by JavaScript -->
+
+          </div>
+
+
+          <div
+            class="online-indicator"
+            id="onlineIndicator"
+            aria-label="Online"
+          ></div>
+
+        </div>
+
+
+        <!-- HEADER -->
+
+        <div class="profile-heading">
+
+
+          <div class="identity">
+
+            <div class="name-row">
+
+              <h1
+                class="profile-name"
+                id="profileName"
+              >
+                Yaya
+              </h1>
+
+
+              <div
+                class="verified"
+                title="PGH profile"
+                aria-label="Verified PGH profile"
+              >
+                ✓
+              </div>
+
+            </div>
+
+
+            <div
+              class="username"
+              id="profileUsername"
+            >
+              @yaya
+            </div>
+
+
+            <div class="status">
+
+              <span
+                class="status-dot"
+                id="statusDot"
+              ></span>
+
+              <span id="profileStatus">
+                Online
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-actions">
+
+            <a
+              href="editor.html"
+              class="action-btn"
+            >
+              ✎ Edit
+            </a>
+
+
+            <button
+              type="button"
+              class="action-btn primary"
+              id="shareButton"
+            >
+              ↗ Share profile
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- BIO -->
+
+        <p
+          class="bio"
+          id="profileBio"
+        >
+          Building. Creating. Exploring.
+          Just making my corner of the internet. ∞
+        </p>
+
+
+        <!-- INTERESTS -->
+
+        <div
+          class="interests"
+          id="profileInterests"
+        ></div>
+
+
+        <!-- DIVIDER -->
+
+        <div class="profile-divider"></div>
+
+
+        <!-- LINKS -->
+
+        <div class="links-heading">
+          Find me
+        </div>
+
+
+        <div
+          class="links-grid"
+          id="profileLinks"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         EMPTY STATE
+    ================================================== -->
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+
+      <div class="empty-icon">
+        ∞
+      </div>
+
+
+      <h2>
+        This profile is empty.
+      </h2>
+
+
+      <p>
+        Build your identity, add your interests,
+        customize your profile and make your PGH
+        space yours.
+      </p>
+
+
+      <a
+        href="editor.html"
+        class="action-btn primary"
+      >
+        Build my profile →
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer>
+
+    <div class="footer-inner">
+
+      <div>
+        <span class="footer-brand">
+          <span>PGH</span>
+        </span>
+
+        — Profile Go Hard
+      </div>
+
+
+      <div>
+        Your identity. Your space.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       TOAST
+  ====================================================== -->
+
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  >
+    Profile link copied.
+  </div>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script>
+
+    /* =====================================================
+       DEFAULT PROFILE
+    ====================================================== */
+
+    const defaultProfile = {
+
+      displayName:
+        "Yaya",
+
+      username:
+        "yaya",
+
+      bio:
+        "Building. Creating. Exploring. Just making my corner of the internet. ∞",
+
+      status:
+        "Online",
+
+      avatar:
+        "person",
+
+      customIcon:
+        "",
+
+      interests:
+        [
+          "Technology",
+          "Coding",
+          "Building"
+        ],
+
+      github:
+        "",
+
+      website:
+        "",
+
+      instagram:
+        "",
+
+      youtube:
+        "",
+
+      theme:
+        "dark"
+
+    };
+
+
+    /* =====================================================
+       SAFE TEXT
+    ====================================================== */
+
+    function safeText(
+      value,
+      fallback = ""
+    ) {
+
+      if (
+        typeof value !== "string"
+      ) {
+
+        return fallback;
+
+      }
+
+      return value.trim() || fallback;
+
+    }
+
+
+    /* =====================================================
+       GET PROFILE
+    ====================================================== */
+
+    function getProfile() {
+
+      let savedProfile = null;
+
+      let account = null;
+
+
+      try {
+
+        savedProfile =
+          JSON.parse(
+            localStorage.getItem(
+              "pgh_profile"
+            ) || "null"
+          );
+
+      } catch {
+
+        savedProfile = null;
+
+      }
+
+
+      try {
+
+        account =
+          JSON.parse(
+            localStorage.getItem(
+              "pgh_account"
+            ) || "null"
+          );
+
+      } catch {
+
+        account = null;
+
+      }
+
+
+      return {
+
+        ...defaultProfile,
+
+        ...(account || {}),
+
+        ...(savedProfile || {})
+
+      };
+
+    }
+
+
+    /* =====================================================
+       THEME MAP
+    ====================================================== */
+
+    const themeMap = {
+
+      dark: {
+
+        accent:
+          "#20e56b",
+
+        light:
+          "#39f47f",
+
+        dark:
+          "#0da94a",
+
+        glow:
+          "rgba(32,229,107,.18)"
+
+      },
+
+      green: {
+
+        accent:
+          "#20e56b",
+
+        light:
+          "#62ff9a",
+
+        dark:
+          "#0a9f45",
+
+        glow:
+          "rgba(32,229,107,.22)"
+
+      },
+
+      mono: {
+
+        accent:
+          "#e9eef0",
+
+        light:
+          "#ffffff",
+
+        dark:
+          "#8b969b",
+
+        glow:
+          "rgba(255,255,255,.13)"
+
+      },
+
+      neon: {
+
+        accent:
+          "#59ffb0",
+
+        light:
+          "#9dffd0",
+
+        dark:
+          "#13bd68",
+
+        glow:
+          "rgba(89,255,176,.2)"
+
+      }
+
+    };
+
+
+    /* =====================================================
+       APPLY THEME
+    ====================================================== */
+
+    function applyTheme(
+      theme
+    ) {
+
+      const selected =
+        themeMap[theme] ||
+        themeMap.dark;
+
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-accent",
+          selected.accent
+        );
+
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-accent-light",
+          selected.light
+        );
+
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-accent-dark",
+          selected.dark
+        );
+
+
+      document.documentElement
+        .style
+        .setProperty(
+          "--profile-glow",
+          selected.glow
+        );
+
+    }
+
+
+    /* =====================================================
+       CREATE DEFAULT HUMAN ICON
+    ====================================================== */
+
+    function createHumanIcon() {
+
+      const svg =
+        document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+
+
+      svg.setAttribute(
+        "class",
+        "profile-human-icon"
+      );
+
+
+      svg.setAttribute(
+        "viewBox",
+        "0 0 100 100"
+      );
+
+
+      svg.setAttribute(
+        "fill",
+        "none"
+      );
+
+
+      svg.setAttribute(
+        "xmlns",
+        "http://www.w3.org/2000/svg"
+      );
+
+
+      svg.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      svg.innerHTML = `
+
+        <defs>
+
+          <linearGradient
+            id="profileHumanGradient"
+            x1="20"
+            y1="10"
+            x2="80"
+            y2="92"
+            gradientUnits="userSpaceOnUse"
+          >
+
+            <stop
+              offset="0"
+              stop-color="var(--profile-accent-light)"
+            />
+
+            <stop
+              offset=".5"
+              stop-color="var(--profile-accent)"
+            />
+
+            <stop
+              offset="1"
+              stop-color="var(--profile-accent-dark)"
+            />
+
+          </linearGradient>
+
+          <filter
+            id="humanSoftGlow"
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
+
+            <feGaussianBlur
+              stdDeviation="2"
+              result="blur"
+            />
+
+            <feMerge>
+
+              <feMergeNode in="blur"></feMergeNode>
+
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+
+            </feMerge>
+
+          </filter>
+
+        </defs>
+
+
+        <!-- subtle outer ring -->
+
+        <circle
+          cx="50"
+          cy="50"
+          r="43"
+          stroke="var(--profile-accent)"
+          stroke-opacity=".12"
+          stroke-width="1.5"
+        />
+
+
+        <!-- head -->
+
+        <circle
+          cx="50"
+          cy="29"
+          r="16"
+          fill="url(#profileHumanGradient)"
+          filter="url(#humanSoftGlow)"
+        />
+
+
+        <!-- neck -->
+
+        <path
+          d="
+            M42 43
+            C43 49 43 52 40 55
+            H60
+            C57 52 57 49 58 43
+            Z
+          "
+          fill="url(#profileHumanGradient)"
+        />
+
+
+        <!-- shoulders / body -->
+
+        <path
+          d="
+            M17 84
+            C19 62 31 50 50 50
+            C69 50 81 62 83 84
+            C83.5 88.5 79.5 91 74 91
+            H26
+            C20.5 91 16.5 88.5 17 84Z
+          "
+          fill="url(#profileHumanGradient)"
+          filter="url(#humanSoftGlow)"
+        />
+
+
+        <!-- inner body highlight -->
+
+        <path
+          d="
+            M29 80
+            C31 65 39 57 50 57
+            C61 57 69 65 71 80
+          "
+          stroke="rgba(255,255,255,.18)"
+          stroke-width="2"
+          stroke-linecap="round"
+          opacity=".65"
+        />
+
+      `;
+
+
+      return svg;
+
+    }
+
+
+    /* =====================================================
+       RENDER AVATAR
+    ====================================================== */
+
+    function renderAvatar(
+      profile
+    ) {
+
+      const avatar =
+        document.getElementById(
+          "avatar"
+        );
+
+
+      avatar.innerHTML = "";
+
+
+      if (
+        profile.customIcon &&
+        typeof profile.customIcon === "string"
+      ) {
+
+        const image =
+          document.createElement("img");
+
+
+        image.className =
+          "custom-avatar-image";
+
+
+        image.alt =
+          `${safeText(
+            profile.displayName,
+            "Profile"
+          )} avatar`;
+
+
+        image.src =
+          profile.customIcon;
+
+
+        image.onerror = () => {
+
+          image.remove();
+
+          avatar.appendChild(
+            createHumanIcon()
+          );
+
+        };
+
+
+        avatar.appendChild(
+          image
+        );
+
+      } else {
+
+        avatar.appendChild(
+          createHumanIcon()
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RENDER INTERESTS
+    ====================================================== */
+
+    function renderInterests(
+      interests
+    ) {
+
+      const container =
+        document.getElementById(
+          "profileInterests"
+        );
+
+
+      container.innerHTML = "";
+
+
+      if (
+        !Array.isArray(interests) ||
+        interests.length === 0
+      ) {
+
+        return;
+
+      }
+
+
+      interests
+        .slice(0, 12)
+        .forEach(
+          interest => {
+
+            const tag =
+              document.createElement("span");
+
+
+            tag.className =
+              "interest";
+
+
+            tag.textContent =
+              safeText(
+                String(interest),
+                "Interest"
+              );
+
+
+            container.appendChild(
+              tag
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =====================================================
+       LINK DATA
+    ====================================================== */
+
+    function getLinks(
+      profile
+    ) {
+
+      return [
+
+        {
+          key:
+            "github",
+
+          label:
+            "GitHub",
+
+          icon:
+            "GH",
+
+          value:
+            safeText(
+              profile.github
+            ),
+
+          prefix:
+            "https://github.com/"
+
+        },
+
+        {
+          key:
+            "website",
+
+          label:
+            "Website",
+
+          icon:
+            "↗",
+
+          value:
+            safeText(
+              profile.website
+            ),
+
+          prefix:
+            ""
+
+        },
+
+        {
+          key:
+            "instagram",
+
+          label:
+            "Instagram",
+
+          icon:
+            "IG",
+
+          value:
+            safeText(
+              profile.instagram
+            ),
+
+          prefix:
+            "https://instagram.com/"
+
+        },
+
+        {
+          key:
+            "youtube",
+
+          label:
+            "YouTube",
+
+          icon:
+            "▶",
+
+          value:
+            safeText(
+              profile.youtube
+            ),
+
+          prefix:
+            "https://youtube.com/"
+
+        }
+
+      ];
+
+    }
+
+
+    /* =====================================================
+       NORMALIZE URL
+    ====================================================== */
+
+    function normalizeUrl(
+      value,
+      prefix = ""
+    ) {
+
+      if (!value) {
+        return "";
+      }
+
+
+      let clean =
+        value.trim();
+
+
+      if (
+        prefix &&
+        !clean.startsWith("http://") &&
+        !clean.startsWith("https://")
+      ) {
+
+        clean =
+          prefix +
+          clean.replace(/^@/, "");
+
+      }
+
+
+      if (
+        !clean.startsWith("http://") &&
+        !clean.startsWith("https://")
+      ) {
+
+        clean =
+          "https://" +
+          clean;
+
+      }
+
+
+      return clean;
+
+    }
+
+
+    /* =====================================================
+       RENDER LINKS
+    ====================================================== */
+
+    function renderLinks(
+      profile
+    ) {
+
+      const container =
+        document.getElementById(
+          "profileLinks"
+        );
+
+
+      container.innerHTML = "";
+
+
+      const links =
+        getLinks(profile);
+
+
+      let visible =
+        0;
+
+
+      links.forEach(
+        link => {
+
+          if (!link.value) {
+            return;
+          }
+
+
+          visible++;
+
+
+          const href =
+            normalizeUrl(
+              link.value,
+              link.prefix
+            );
+
+
+          const anchor =
+            document.createElement("a");
+
+
+          anchor.className =
+            "profile-link";
+
+
+          anchor.href =
+            href;
+
+
+          anchor.target =
+            "_blank";
+
+
+          anchor.rel =
+            "noopener noreferrer";
+
+
+          anchor.innerHTML = `
+
+            <div class="link-icon">
+              ${link.icon}
+            </div>
+
+            <div class="link-info">
+
+              <div class="link-name">
+                ${link.label}
+              </div>
+
+              <div class="link-value">
+                ${link.value}
+              </div>
+
+            </div>
+
+          `;
+
+
+          container.appendChild(
+            anchor
+          );
+
+        }
+      );
+
+
+      const heading =
+        document.querySelector(
+          ".links-heading"
+        );
+
+
+      const divider =
+        document.querySelector(
+          ".profile-divider"
+        );
+
+
+      if (!visible) {
+
+        heading.style.display =
+          "none";
+
+        divider.style.display =
+          "none";
+
+        container.style.display =
+          "none";
+
+      } else {
+
+        heading.style.display =
+          "";
+
+        divider.style.display =
+          "";
+
+        container.style.display =
+          "";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RENDER PROFILE
+    ====================================================== */
+
+    function renderProfile(
+      profile
+    ) {
+
+      applyTheme(
+        profile.theme
+      );
+
+
+      const displayName =
+        safeText(
+          profile.displayName,
+          "Yaya"
+        );
+
+
+      const username =
+        safeText(
+          profile.username,
+          "yaya"
+        );
+
+
+      const bio =
+        safeText(
+          profile.bio,
+          "Building. Creating. Exploring. ∞"
+        );
+
+
+      const profileStatus =
+        safeText(
+          profile.status,
+          "Online"
+        );
+
+
+      document.title =
+        `${displayName} — Profile Go Hard`;
+
+
+      document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+          "content",
+          `${displayName}'s Profile Go Hard profile.`
+        );
+
+
+      document.getElementById(
+        "profileName"
+      ).textContent =
+        displayName;
+
+
+      document.getElementById(
+        "profileUsername"
+      ).textContent =
+        `@${username.replace(/^@/, "")}`;
+
+
+      document.getElementById(
+        "profileBio"
+      ).textContent =
+        bio;
+
+
+      document.getElementById(
+        "profileStatus"
+      ).textContent =
+        profileStatus;
+
+
+      renderAvatar(
+        profile
+      );
+
+
+      renderInterests(
+        profile.interests
+      );
+
+
+      renderLinks(
+        profile
+      );
+
+    }
+
+
+    /* =====================================================
+       TOAST
+    ====================================================== */
+
+    const toast =
+      document.getElementById(
+        "toast"
+      );
+
+
+    let toastTimer;
+
+
+    function showToast(
+      message
+    ) {
+
+      toast.textContent =
+        message;
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      clearTimeout(
+        toastTimer
+      );
+
+
+      toastTimer =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          2600
+        );
+
+    }
+
+
+    /* =====================================================
+       SHARE PROFILE
+    ====================================================== */
+
+    async function shareProfile() {
+
+      const profile =
+        getProfile();
+
+
+      const username =
+        safeText(
+          profile.username,
+          "profile"
+        ).replace(
+          /^@/,
+          ""
+        );
+
+
+      const shareUrl =
+        window.location.href;
+
+
+      const shareData = {
+
+        title:
+          `${safeText(
+            profile.displayName,
+            "Profile"
+          )} — Profile Go Hard`,
+
+        text:
+          `Check out @${username} on Profile Go Hard.`,
+
+        url:
+          shareUrl
+
+      };
+
+
+      try {
+
+        if (
+          navigator.share
+        ) {
+
+          await navigator.share(
+            shareData
+          );
+
+          return;
+
+        }
+
+
+        if (
+          navigator.clipboard &&
+          window.isSecureContext
+        ) {
+
+          await navigator.clipboard.writeText(
+            shareUrl
+          );
+
+          showToast(
+            "Profile link copied."
+          );
+
+          return;
+
+        }
+
+
+        const temp =
+          document.createElement("textarea");
+
+
+        temp.value =
+          shareUrl;
+
+
+        document.body.appendChild(
+          temp
+        );
+
+
+        temp.select();
+
+
+        document.execCommand(
+          "copy"
+        );
+
+
+        temp.remove();
+
+
+        showToast(
+          "Profile link copied."
+        );
+
+      } catch (error) {
+
+        if (
+          error &&
+          error.name === "AbortError"
+        ) {
+
+          return;
+
+        }
+
+
+        showToast(
+          "Could not share the profile."
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SHARE BUTTONS
+    ====================================================== */
+
+    document
+      .getElementById(
+        "shareButton"
+      )
+      .addEventListener(
+        "click",
+        shareProfile
+      );
+
+
+    document
+      .getElementById(
+        "shareTop"
+      )
+      .addEventListener(
+        "click",
+        shareProfile
+      );
+
+
+    /* =====================================================
+       CUSTOM CURSOR
+    ====================================================== */
+
+    const cursorDot =
+      document.getElementById(
+        "cursorDot"
+      );
+
+
+    const cursorRing =
+      document.getElementById(
+        "cursorRing"
+      );
+
+
+    const finePointer =
+      window.matchMedia(
+        "(hover: hover) and (pointer: fine)"
+      );
+
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+
+    if (
+      finePointer.matches &&
+      !reducedMotion.matches
+    ) {
+
+      document.body.classList.add(
+        "cursor-ready"
+      );
+
+
+      let mouseX = 0;
+      let mouseY = 0;
+
+      let ringX = 0;
+      let ringY = 0;
+
+
+      window.addEventListener(
+        "mousemove",
+        event => {
+
+          mouseX =
+            event.clientX;
+
+          mouseY =
+            event.clientY;
+
+
+          cursorDot.style.left =
+            `${mouseX}px`;
+
+          cursorDot.style.top =
+            `${mouseY}px`;
+
+        }
+      );
+
+
+      function animateCursor() {
+
+        ringX +=
+          (mouseX - ringX) * .16;
+
+        ringY +=
+          (mouseY - ringY) * .16;
+
+
+        cursorRing.style.left =
+          `${ringX}px`;
+
+        cursorRing.style.top =
+          `${ringY}px`;
+
+
+        requestAnimationFrame(
+          animateCursor
+        );
+
+      }
+
+
+      animateCursor();
+
+
+      const interactiveElements =
+        document.querySelectorAll(
+          "a, button, .interest, .profile-link, .avatar"
+        );
+
+
+      interactiveElements.forEach(
+        element => {
+
+          element.addEventListener(
+            "mouseenter",
+            () => {
+
+              document.body.classList.add(
+                "cursor-hover"
+              );
+
+            }
+          );
+
+
+          element.addEventListener(
+            "mouseleave",
+            () => {
+
+              document.body.classList.remove(
+                "cursor-hover"
+              );
+
+            }
+          );
+
+        }
+      );
+
+
+      window.addEventListener(
+        "mouseleave",
+        () => {
+
+          cursorDot.style.opacity =
+            "0";
+
+          cursorRing.style.opacity =
+            "0";
+
+        }
+      );
+
+
+      window.addEventListener(
+        "mouseenter",
+        () => {
+
+          cursorDot.style.opacity =
+            "1";
+
+          cursorRing.style.opacity =
+            "1";
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       SPLASH
+    ====================================================== */
+
+    const splash =
+      document.getElementById(
+        "splash"
+      );
+
+
+    const splashStatus =
+      document.getElementById(
+        "splashStatus"
+      );
+
+
+    const splashMessages = [
+
+      "Loading profile...",
+
+      "Charging the aura...",
+
+      "Restoring your identity...",
+
+      "Preparing your space...",
+
+      "Almost ready..."
+
+    ];
+
+
+    let splashIndex = 0;
+
+
+    const splashTimer =
+      setInterval(
+        () => {
+
+          splashIndex++;
+
+
+          if (
+            splashIndex >=
+            splashMessages.length
+          ) {
+
+            clearInterval(
+              splashTimer
+            );
+
+            return;
+
+          }
+
+
+          splashStatus.style.opacity =
+            "0";
+
+
+          setTimeout(
+            () => {
+
+              splashStatus.textContent =
+                splashMessages[
+                  splashIndex
+                ];
+
+              splashStatus.style.opacity =
+                "1";
+
+            },
+            120
+          );
+
+        },
+        360
+      );
+
+
+    /* =====================================================
+       PAGE LOAD
+    ====================================================== */
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        const profile =
+          getProfile();
+
+
+        renderProfile(
+          profile
+        );
+
+
+        setTimeout(
+          () => {
+
+            splash.classList.add(
+              "hide"
+            );
+
+
+            document.body.classList.remove(
+              "loading"
+            );
+
+          },
+          2050
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>

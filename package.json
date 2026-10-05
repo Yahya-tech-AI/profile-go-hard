@@ -1,0 +1,14 @@
+{
+  "name": "profile-go-hard",
+  "version": "1.0.0",
+  "description": "Profile Go Hard - your profile, your identity, your aura.",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve .",
+    "preview": "npx serve ."
+  },
+  "keywords": ["profile","identity","profile-builder","social","portfolio"],
+  "author": "Yaya",
+  "license": "MIT"
+}
